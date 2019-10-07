@@ -1,0 +1,229 @@
+\documentclass[12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{latexsym,amsfonts,amssymb,amsthm,amsmath}
+
+\setlength{\parindent}{0in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.8in}
+\setlength{\topmargin}{0in}
+\setlength{\headheight}{18pt}
+
+
+
+\title{Proof And Types: Assignment 1}
+\author{Kishlaya Jaiswal}
+
+\begin{document}
+
+\maketitle
+
+\vspace{0.5in}
+
+
+
+\subsection*{2.5}
+(Statement of problem goes here.)\\
+
+\begin{proof}
+Suppose not, that is $\vdash \bot$.
+
+Now, using soundness theorem for Natural Deduction logic system, we know that for every Heyting Algebra $\mathcal{H}$ and every valuation $v$ on $\mathcal{H}$, $v(\bot) = 1$.
+
+But consider, the usual boolean algebra on $(0,1)$ (which is a Heyting algebra) and the valuation $v$: PV $\rightarrow \mathcal{H}$ where $v(x) = 0$ $\forall x \in$ PV.
+
+According to the definition, $\widetilde{v}(\bot) = 0$, where $\widetilde{v}$ is the extension of $v$ to all the well-formed formulas. But that leads to a contradiction.
+\end{proof}
+
+
+\subsection*{2.6}
+(Statement of problem goes here.)\\
+
+\begin{proof}
+Lemma 2.3.4 says that the following are valid:
+\begin{itemize}
+    \item $a \vee a = a$ and $a \wedge a = a$
+    \item $a \vee b = b \vee a$ and $a \wedge b = b \wedge a$
+    \item $(a \vee b) \vee c = a \vee (b \vee c)$ and $(a \wedge b) \wedge c = a \wedge (b \wedge c)$
+    \item $(a \vee b) \wedge a = a$ and $(a \wedge b) \vee a = a$
+\end{itemize}
+
+Define $\leq$ relation on $A$ as: $a \leq b$ if $a \vee b = b$.
+
+Using these, we shall first show that our $(A, \leq)$ is a poset:
+
+\textbf{Reflexive:} since we have $a \vee a = a$ (from the lemma) $\implies a \leq a$
+
+\textbf{Anti-symmetric:} Suppose $a \leq b$ and $b \leq a$ then we have $a \vee b = a$ and $b \vee a = a$. Using the lemma, $a = b \vee a = a \vee b = b$
+
+\textbf{Transitive:} Suppose $a \leq b$ and $b \leq c$ then we have $a \vee b = b$ and $b \vee c = c$. Hence, $b \vee c = (a \vee b) \vee (b \vee c) \implies c = a \vee (b \vee b) \vee c = a \vee (b \vee c) = a \vee c \implies a \leq c$
+
+Now, we show that the operation 
+
+\textbf{$\vee$ is suprema:} Suppose $c$ is an upper bound on $a$ and $b$ then $a \leq c$ and $b \leq c$ $\implies$ $a \vee c = c$ and $b \vee c = c$ then we get $(a \vee b) \vee c = a \vee (b \vee c) = a \vee c = c$. Hence $a \vee b \leq c$
+
+Before proving infima, we show that $a \vee b = b$ and $a \wedge b = a$ are equivalent.
+
+$b = a \vee b \implies a \wedge b = a \wedge (a \vee b) = (a \vee b) \wedge a = a$
+
+$a = a \wedge b \implies a \vee b = (a \wedge b) \vee b = (b \wedge a) \vee b = b$
+
+\textbf{$\wedge$ is infima:} Suppose $c$ is a lower bound on $a$ and $b$ then $c \leq a$ and $c \leq b$ $\implies$ $c \wedge a = c$ and $c \wedge b = c$ then we get $c \wedge (a \wedge b) = (c \wedge a) \wedge b = c \wedge b = c$. Hence $c \leq a \wedge b$
+\end{proof}
+
+\subsection*{2.8}
+
+\begin{proof}
+We shall show that 
+$$(a \wedge c) \vee (b \wedge c) \leq (a \vee b) \wedge c$$ 
+Then from anti-symmetric property of $\leq$, the result follows.
+
+For that, we state the following two properties:
+
+\textbf{Property 1}: $a \leq c$ and $b \leq c$ $\implies a \vee b \leq c$
+
+\textbf{Property 2}: $c \leq a$ and $c \leq b$ $\implies c \leq a \wedge b$
+
+Observe 
+$$a \wedge c \leq a \leq a \vee b \text{ \& } a \wedge c \leq c \implies a \wedge c \leq (a \vee b) \wedge c \text{ (using property 2)}$$
+
+Similarly,
+$$b \wedge c \leq b \leq a \vee b \text{ \& } b \wedge c \leq c \implies b \wedge c \leq (a \vee b) \wedge c \text{ (using property 2)}$$
+
+Now using, property 1 on the above two inequalities, we get our desired result.
+
+\end{proof}
+
+\subsection*{2.13}
+
+\begin{proof}
+Recall the following result:
+
+\textbf{Theorem}: Let $F$ be a proper filter in $\mathcal{H}$ and $a \not \in F$. There exists a prime filter $G$ such that $F \subseteq G$ and $a \not \in G$
+
+First note that, since $v \not \models \varphi \implies v(\varphi) \neq 1 \implies -v(\varphi) \neq 0$ as $\mathcal{B}$ is a Boolean algebra so $v(\varphi) \vee -v(\varphi) = 1$
+
+Let $F = \{a : -v(\varphi) \leq a\}$. Then F is a proper filter because:
+\begin{itemize}
+    \item if $a,b \in F$ then $-v(\varphi) \leq a$ and $-v(\varphi) \leq b$ $\implies -v(\varphi) \leq a \wedge b \implies a \wedge b \in F$
+    \item if $a \in F$ then $-v(\varphi) \leq a$ and so $-v(\varphi) \leq b$, $\forall a \leq b$
+    \item Since $-v(\varphi) \neq 0 \implies 0 \not \in F$
+\end{itemize}
+
+We can apply this theorem to $F$ and $a = 0$ to get a prime filter $G$ such that $-v(\varphi) \in F \subseteq G$. Now,
+
+$$v(\neg \varphi) = v(\varphi \rightarrow \bot) = v(\varphi) \implies v(\bot) = v(\varphi) \implies 0 = -v(\varphi) \in G$$
+
+\textbf{Claim}: $v(\varphi) \not \in G$
+\begin{proof}: Suppose $v(\varphi) \in G \implies v(\varphi) \wedge -v(\varphi) = 0 \in G$ But G being a filter, $0 \leq a \in G$ $\forall a \in G$. Thus $G = \mathcal{H}$ and so $G$ is not a proper filter hence is not a prime filter, which is a contradiction.
+\end{proof}
+
+Now, to show that $w(\varphi) = 0$, we induct on the size of the formula $\varphi$:
+\begin{itemize}
+    \item For $\varphi = p$, we have $w(p) = 0$ by definition of $w$ as $p \not \in G$
+    \item For $\varphi = \alpha \vee \beta$, we note that $\alpha \leq \alpha \vee \beta$ and so if $\alpha \in G \implies \alpha \vee \beta = \varphi \in G$. Thus, $\alpha \not \in G$. By inductive hypothesis, $w(\alpha) = 0$. Similarly, $w(\beta) = 0$. Hence, $w(\varphi) = w(\alpha \vee \beta) = w(\alpha) \vee w(\beta) = 0 \vee 0 = 0$
+    \item For $\varphi = \alpha \wedge \beta$. If $v(\alpha) \in G$ and $v(\beta) \in G$ then $v(\alpha) \wedge v(\beta) \in G \implies v(\varphi) \in G$. Hence we can assume WLOG $v(\alpha) \not \in G$. So, by inductive hypothesis $w(\alpha) = 0$. Thus, $w(\varphi) = w(\alpha) \wedge w(\beta) = 0 \wedge w(\beta) = 0$
+    \item For $\varphi = \alpha \rightarrow \beta$. So, $w(\varphi) = w(\alpha) \Rightarrow w(\beta)$. But for boolean algebras, we know that $c \Rightarrow d = -c \vee d$. So, $w(\varphi) = -w(\alpha) \vee w(\beta)$. As in the second case, $-w(\alpha) = 0$ and $w(\beta) = 0$.
+\end{itemize}
+Hence, $w(\varphi) = 0$
+\end{proof}
+
+\subsection*{2.14}
+
+\begin{proof}
+We show the following sequence:
+
+\textbf{(i) $\implies$ (iii)}:
+
+We prove the contrapositive. Suppose there exists some Boolean algebra $\mathcal{B}$ and a valuation $v$ in $\mathcal{B}$ such that $\mathcal{B}, v \not \models \varphi$, then using the previous exercise, there exists a $0-1$ valuation $w$ such that $w \not \models \varphi$. Hence $\mathbb{B} \not \models \varphi$.
+
+\textbf{(iii) $\implies$ (ii)}:
+
+Since $\mathcal{B} \models \varphi$ $\forall \mathcal{B}$, setting $\mathcal{B} = \mathcal{B}_0$, gives us the desired result.
+
+\textbf{(ii) $\implies$ (i)}:
+
+Consider any valuation $v$ in $\mathbb{B}$. We want to show that $v \models \varphi$. But since $\mathbb{B} \subseteq \mathcal{B}_0$, we can regard $v$ as $\mathcal{B}_0$ valuation. But since $\mathcal{B}_0,w \models \varphi$ $forall$ valuations $w$, in particular, setting $w=v$, we get the desired result.
+
+\end{proof}
+
+\subsection*{2.21 (i)} NOT VALID
+
+\begin{proof}
+In the subseuqent sections, we shall consider the Heyting algebra $\mathcal{H} = \mathbb{R}$ with all open subsets.
+
+\end{proof}
+
+\subsection*{2.21 (iii)} NOT VALID
+
+\begin{proof}
+Consider the valuation $v$ on $\mathcal{H}$ defined as follows: $v(p) = (0,,\infty)$. Then we get that 
+
+\begin{align*}
+    v(\neg p) &&=&& (-\infty, 0) \\
+    v(\neg \neg p) &&=&& (0, \infty) \\
+    v(\neg p \vee \neg \neg p) &&=&& \mathbb{R} \setminus \{0\}
+\end{align*}
+
+\end{proof}
+
+\subsection*{2.21 (iv)} VALID
+
+\begin{proof}
+Consider any valuation $v$ on $\mathcal{H}$. Let $v(p) = P \subseteq \mathbb{R}$ and $v(q) = Q \subseteq \mathbb{R}$. Then we get that
+
+\begin{align*}
+    v(\neg p) && = && \overline{P} \\
+    v(\neg q) && = && \overline{Q} \\
+    v(\neg p \vee \neg q) && = && \overline{P} \cup \overline{Q} \\
+    v(p \wedge q) && = && P \cap Q \\
+    v(\neg (p \wedge q)) && = && \overline{P \cap Q} \\
+    v(\neg p \vee \neg q \rightarrow \neg (p \wedge q)) = Int[\overline{\overline{P} \cup \overline{Q}} \cup \overline{P \cap Q}] && = && Int[(P \cap Q) \cup \overline{P \cap Q}] = \mathbb{R}
+\end{align*}
+\end{proof}
+
+\subsection*{2.21 (v)} NOT VALID
+\begin{proof}
+Consider any valuation $v$ on $\mathcal{H}$. Let $v(p) = (0, \infty)$ and $v(q) = (-\infty, 0)$. Then we get that
+
+\begin{align*}
+    v(p \wedge q) = \phi
+    v(p \rightarrow p \wedge q) && = && (-\infty, 0) \\
+    v(q \rightarrow p \wedge q) && = && (0, \infty) \\
+    v((p \rightarrow p \wedge q) \vee (q \rightarrow p \wedge q)) && = && \mathbb{R} \setminus \{0\} \\
+\end{align*}
+\end{proof}
+
+\subsection*{2.32}
+
+\begin{proof}
+We proceed by induction on structure of $\varphi$:
+
+\begin{itemize}
+    \item $\varphi = p$. Then since $c$ determines all the propositional variables in $\varphi$, we get:  $v_c(\varphi) = 1 \implies v_c(p) = 1 \implies c \Vdash p \implies c \Vdash \varphi$
+    
+    \item $\varphi = \alpha \vee \beta$. Then $v_c(\varphi) = v_c(\alpha \vee \beta) = v_c(\alpha) \vee v_c(\beta) = 1 \implies v_c(\alpha) = 1$ or $v_c(\beta) = 1$, so by inductive hypothesis, $c \Vdash \alpha$ or $c \Vdash \beta$ respectively. And hence, $c \Vdash \varphi$
+    
+    \item $\varphi = \alpha \wedge \beta$. Then $v_c(\varphi) = v_c(\alpha \wedge \beta) = v_c(\alpha) \wedge v_c(\beta) = 1 \implies v_c(\alpha) = 1$ and $v_c(\beta) = 1$, so by inductive hypothesis, $c \Vdash \alpha$ and $c \Vdash \beta$. And hence, $c \Vdash \varphi$
+    
+    \item $\varphi = \alpha \rightarrow \beta$. So, $v_c(\varphi) = v_c(\alpha \rightarrow \beta) = v_c(\alpha) \Rightarrow v_c(\beta)$. But since, $v_c$ is a valuation in a boolean algebra, $v_c(\alpha) \Rightarrow v_c(\beta) = -v_c(\alpha) \vee v_c(\beta) = v_c(\neg \alpha) \vee v_c(\beta)$. Thus, $v_c(\varphi) = v_c(\neg \alpha) \vee v_c(\beta) = 1$. Now suppose, $v_c(\beta) = 1 \implies c \Vdash \beta$ and so by monotonicity property, $\forall$ $c' \geq c$, $c' \Vdash \beta$, so for any $c' \geq c$ with $c' \Vdash \alpha$, we have that $c' \Vdash \beta$. Hence $c \Vdash \alpha \rightarrow \beta \implies c \Vdash \varphi$. Now suppose $v_c(\beta) \neq 1$, then $v_c(\neg \alpha) = 1 \implies c \Vdash \neg \alpha \implies$ $\forall$ $c' \geq c$, we have $c' \not \Vdash \alpha$. Hence, the statement $\forall$ $c' \geq c$ with $c' \Vdash \alpha \implies c' \Vdash \beta$ holds vacuously true. Therefore, we get $c \Vdash \varphi$.
+\end{itemize}
+
+Now, we show that a formula is a classical tautology iff if is it is forced in every one-element model.
+
+For that, we first show that every one-element model uniquely determines a valuation.
+
+Suppose $(\mathcal{C} = \{c\}, \leq, \Vdash)$ is a one-element model. Let $P$ be the set of all those propositional variables which are forced in $c$. Consider $q \not \in P$. Then note that the statement $\forall$ $c' \geq c$ describes only $c$ and $c \not \Vdash q$. Hence $c \Vdash \neg q$. Thus, $v_c(p) = 1$ iff $p \in P$, defines a unique valuation.
+
+Now, let $\varphi$ be a classical tautology. Let $(\mathcal{C} = \{c\}, \leq, \Vdash)$ be a one-element model. Then it defines a unique valuation $v_c$. Hence, $v_c \vDash \varphi \implies v_c(\varphi) = 1 \implies c \Vdash \varphi$
+
+Conversely, suppose $\varphi$ is a formula which is forced in all one-element models. Then consider any valuation $v$. Define $(\mathcal{C} = \{c\}, \leq, \Vdash)$ such that $c \Vdash p$ iff $v(p) = 1$ for all propositional variables $p$. This is a clearly valid Kripke model. Hence, $c \Vdash \varphi$. Now, we observe that $v_c = v$ as they agree on all propositional variables. Suppose that $v_c(\varphi) = 0 \implies v_c(\neg \varphi) = 1 \implies c \Vdash \neg \varphi$ which is a contradiction. Hence $v(\varphi) = 1$. And thus $v \vDash \varphi$.
+\end{proof}
+
+\subsection*{2.34}
+
+\vspace{1in} %Leave more space for comments!
+
+\end{document}
+
