@@ -21,6 +21,115 @@
 
 \vspace{0.5in}
 
+\subsection*{1.8}
+
+\begin{proof}
+
+We first prove a sequence a lemmas.
+
+\textbf{Lemma}: If $x \neq y$ and $x \not \in FV(L)$ then $$M[x:=N][y:=L] = M[y:=L][x:=N[y:=L]]]$$
+
+\begin{proof}
+By induction on $M$.
+\textsl{Case}: $M=x$, since $x \neq y$
+\begin{align*}
+    M[x:=N][y:=L] &&=&& x[x:=N][y:=L] \\
+    &&=&& N[y:=L] \\
+    &&=&& x[x:=N[y:=L]] \\
+    &&=&& x[y:=L][x:=N[y:=L]] \\
+    &&=&& M[y:=L][x:=N[y:=L]] \\
+\end{align*}
+
+\textsl{Case}: $M=y$
+\begin{align*}
+    M[x:=N][y:=L] &&=&& L \\
+    &&=&& M[y:=L][x:=N[y:=L]] \\
+\end{align*}
+
+\textsl{Case}: $M=x$ where $z \neq x$ and $z \neq y$
+\begin{align*}
+    M[x:=N][y:=L] &&=&& z \\
+    &&=&& M[y:=L][x:=N[y:=L]] \\
+\end{align*}
+
+\textsl{Case}: $M=\lambda z.P$ where $z \neq x$ and $z \neq y$
+\begin{align*}
+    M[x:=N][y:=L] &&=&& \lambda z.P[x:=N][y:=L] \\
+    &&=&& \lambda z.P[y:=L][x:=N[y:=L]] \\
+    &&=&& M[y:=L][x:=N[y:=L]] \\
+\end{align*}
+
+\textsl{Case}: $M = P Q$
+\begin{align*}
+    M[x:=N][y:=L] &&=&& (P Q)[x:=N][y:=L] \\
+    &&=&& (P[x:=N][y:=L]) (Q[x:=N][y:=L]) \\
+    &&=&& (P[y:=L][x:=N[y:=L]]) (Q[y:=L][x:=N[y:=L]]) \\
+    &&=&& (P Q)[y:=L][x:=N[y:=L]] \\
+    &&=&& M[y:=L][x:=N[y:=L]] \\
+\end{align*}
+
+\end{proof}
+
+\textbf{Lemma}: Assume that $P, P' \in \Lambda$ are such that $P \twoheadrightarrow_{\beta} P'$ then for all $x \in V$ and $Q \in \Lambda$:
+
+(i) $\lambda x.P \twoheadrightarrow_{\beta} \lambda x.P'$ \\
+(ii) $P Q \twoheadrightarrow_{\beta} P' Q$ \\
+(iii) $Q P \twoheadrightarrow_{\beta} Q P'$ \\
+
+\begin{proof}
+By induction on the derivation of $P \twoheadrightarrow_{\beta} P'$.
+
+\textsl{Case}: $P \rightarrow_{\beta} P'$ then clearly, $\lambda x.P \rightarrow_{\beta} \lambda x.P'$  and $P Q \rightarrow_{\beta} P' Q$ and $Q P \rightarrow_{\beta} Q P'$ \\
+
+\textsl{Case}: there exists $P''$ such that $P \twoheadrightarrow_{\beta} P''$ and $P'' \rightarrow_{\beta} P'$ then by inductive hypothesis, $\lambda x.P \twoheadrightarrow_{\beta} \lambda x.P'$ and $\lambda x.P'' \rightarrow_{\beta} \lambda x.P'$  and so $\lambda x.P \twoheadrightarrow_{\beta} \lambda x.P'$. 
+
+Again, by inductive hypothesis, $P Q \twoheadrightarrow_{\beta} P'' Q$ and $P'' Q \rightarrow_{\beta} P' Q$ and so $P Q \twoheadrightarrow_{\beta} P' Q$.
+
+Similarly, by inductive hypothesis, $Q P \twoheadrightarrow_{\beta} Q P''$ and $Q P'' \rightarrow_{\beta} Q P'$ and so $Q P \twoheadrightarrow_{\beta} Q P'$.
+
+\textsl{Case}: $P = P'$ then clearly, $\lambda x.P = \lambda x.P'$  and $P Q = P' Q$ and $Q P = Q P'$ \\
+\end{proof}
+
+\textbf{Lemma}: For all $P, P', Q \in \Lambda$ if $P \rightarrow_{\beta} P'$ then also $P[x:=Q] \rightarrow_{\beta} P'[x:=Q]$
+\begin{proof}
+By induction on the derivation of $P \rightarrow_{\beta} P'$.
+\end{proof}
+
+\textbf{Lemma}: For all $P,Q,Q' \in \Lambda$ if $Q \rightarrow_{\beta} Q'$ then also $P[x:=Q] \twoheadrightarrow_{\beta} P[x:=Q']$
+\begin{proof}
+By induction on structure of $P$.
+
+\textsl{Case}: $P=x$ then $P[x:=Q] = Q \rightarrow_{\beta} Q' = P[x:=Q']$ \\
+\textsl{Case}: $P=y$ then $P[x:=Q] = y \rightarrow_{\beta} y = P[x:=Q']$ \\
+\textsl{Case}: $P=\lambda y.P'$ then
+\begin{align*}
+    P[x:=Q] &&=&& (\lambda y.P')[x:=Q] \\
+    &&=&& \lambda y.P'[x:=Q] \\
+    &&\rightarrow_{\beta}&&  \lambda y.P'[x:=Q'] \\
+    &&=&& (\lambda y.P')[x:=Q'] \\
+    &&=&& P[x:=Q']
+\end{align*}
+\textsl{Case}: $P = P_1 P_2$ then
+\begin{align*}
+    P[x:=Q] &&=&& (P_1 P_2)[x:=Q] \\
+    &&=&&  (P_1[x:=Q])(P_2[x:=Q]) \\
+    &&\rightarrow_{\beta}&& (P_1[x:=Q'])(P_2[x:=Q]) \\
+    &&\rightarrow_{\beta}&& (P_1[x:=Q'])(P_2[x:=Q']) \\
+    &&=&&  (P_1[x:=Q'])(P_2[x:=Q']) \\
+    &&=&& (P_1 P_2)[x:=Q'] \\
+    &&=&& P[x:=Q']
+\end{align*}
+\end{proof}
+
+Now, we can finally present the proof of Weak Church Rosser property.
+
+We proceed by induction on derivation of $M_1 \rightarrow_{\beta} M_2$.
+
+\textsl{Case}: $M_1 = (\lambda x. P) Q$ and $M_2 = P[x:=Q]$. Then either 
+
+
+
+\end{proof}
 
 
 \subsection*{2.5}
@@ -79,7 +188,7 @@ We shall show that
 $$(a \wedge c) \vee (b \wedge c) \leq (a \vee b) \wedge c$$ 
 Then from anti-symmetric property of $\leq$, the result follows.
 
-For that, we state the following two properties:
+For that, we recall the following two properties:
 
 \textbf{Property 1}: $a \leq c$ and $b \leq c$ $\implies a \vee b \leq c$
 
@@ -148,11 +257,26 @@ Consider any valuation $v$ in $\mathbb{B}$. We want to show that $v \models \var
 
 \end{proof}
 
-\subsection*{2.21 (i)} NOT VALID
+\subsection*{2.21 (i)} VALID
 
 \begin{proof}
-In the subseuqent sections, we shall consider the Heyting algebra $\mathcal{H} = \mathbb{R}$ with all open subsets.
+In the subsequent sections, we shall consider the Heyting algebra $\mathcal{H} = \mathbb{R}$ with all open subsets. 
+\end{proof}
 
+\subsection*{2.21 (ii)} VALID
+\begin{proof}
+Let $\Gamma = \{(((p \rightarrow q) \rightarrow p) \rightarrow p) \rightarrow q, (p \rightarrow q) \rightarrow p\}$. Then 
+\begin{align*}
+    \Gamma, p &&\vdash&& p && &&(Ax)\\
+    \Gamma, p &&\vdash&& ((p \rightarrow q) \rightarrow p) \rightarrow p && &&(\rightarrow I)\\
+    \Gamma, p &&\vdash&& (((p \rightarrow q) \rightarrow p) \rightarrow p) \rightarrow q) && &&(Ax)\\
+    \Gamma p &&\vdash&& q && &&(\rightarrow E) \\
+    \Gamma &&\vdash&& p \rightarrow q && &&(\rightarrow I) \\
+    \Gamma &&\vdash&& p && &&(\rightarrow E) \\
+    (((p \rightarrow q) \rightarrow p) \rightarrow p) \rightarrow q &&\vdash&& ((p \rightarrow q) \rightarrow p) \rightarrow p && &&(\rightarrow I) \\
+    (((p \rightarrow q) \rightarrow p) \rightarrow p) \rightarrow q &&\vdash&& q && &&(\rightarrow E) \\
+    &&\vdash&& ((((p \rightarrow q) \rightarrow p) \rightarrow p) \rightarrow q) q && &&(\rightarrow I) \\
+\end{align*}
 \end{proof}
 
 \subsection*{2.21 (iii)} NOT VALID
@@ -179,21 +303,67 @@ Consider any valuation $v$ on $\mathcal{H}$. Let $v(p) = P \subseteq \mathbb{R}$
     v(\neg p \vee \neg q) && = && \overline{P} \cup \overline{Q} \\
     v(p \wedge q) && = && P \cap Q \\
     v(\neg (p \wedge q)) && = && \overline{P \cap Q} \\
-    v(\neg p \vee \neg q \rightarrow \neg (p \wedge q)) = Int[\overline{\overline{P} \cup \overline{Q}} \cup \overline{P \cap Q}] && = && Int[(P \cap Q) \cup \overline{P \cap Q}] = \mathbb{R}
+    v(\neg p \vee \neg q \rightarrow \neg (p \wedge q)) = Int[\overline{\overline{P} \cup \overline{Q}} \cup \overline{P \cap Q}] && = && Int[(P \cap Q) \cup \overline{(P \cap Q)}] = \mathbb{R}
 \end{align*}
 \end{proof}
 
 \subsection*{2.21 (v)} NOT VALID
 \begin{proof}
-Consider any valuation $v$ on $\mathcal{H}$. Let $v(p) = (0, \infty)$ and $v(q) = (-\infty, 0)$. Then we get that
+Consider the valuation $v$ on $\mathcal{H}$ defined as follows: $v(p) = (0, \infty)$ and $v(q) = (-\infty, 0)$. Then we get that
 
 \begin{align*}
-    v(p \wedge q) = \phi
+    v(p \wedge q) &&=&& \phi \\
     v(p \rightarrow p \wedge q) && = && (-\infty, 0) \\
     v(q \rightarrow p \wedge q) && = && (0, \infty) \\
     v((p \rightarrow p \wedge q) \vee (q \rightarrow p \wedge q)) && = && \mathbb{R} \setminus \{0\} \\
 \end{align*}
 \end{proof}
+
+\subsection*{2.21 (vi)} NOT VALID
+
+\subsection*{2.21 (vii)} NOT VALID
+
+\subsection*{2.21 (viii)} VALID
+\begin{proof}
+\begin{align*}
+    (p \vee \neg p) \rightarrow \neg q, q, p &&\vdash&& p \vee \neg p && &&(\vee I)\\
+    (p \vee \neg p) \rightarrow \neg q, q, p &&\vdash&& \neg q && &&(\rightarrow E) \\
+    (p \vee \neg p) \rightarrow \neg q, q, p &&\vdash&& \bot && &&(\rightarrow E) \\
+    (p \vee \neg p) \rightarrow \neg q, q &&\vdash&& \neg p && &&(\rightarrow I) \\
+    (p \vee \neg p) \rightarrow \neg q, q &&\vdash&& p \vee \neg p && &&(\vee I) \\
+    (p \vee \neg p) \rightarrow \neg q, q &&\vdash&& \neg q && &&(\rightarrow E) \\
+    (p \vee \neg p) \rightarrow \neg q, q &&\vdash&& \bot && &&(\rightarrow E) \\
+    (p \vee \neg p) \rightarrow \neg q &&\vdash&& \neq q && &&(\rightarrow I) \\
+    &&\vdash&& ((p \vee \neg p) \rightarrow \neg q) \rightarrow \neg q && &&(\rightarrow I) \\
+\end{align*}
+\end{proof}
+
+\subsection*{2.21 (ix)} VALID
+\begin{proof}
+\begin{align*}
+    p \rightarrow \neg p, p &&\vdash&& \neg p && &&(\rightarrow E) \\
+    p \rightarrow \neg p, p &&\vdash&& \bot && &&(\rightarrow E) \\
+    p \rightarrow \neg p &&\vdash&& \neg p && &&(\rightarrow I) \\
+\end{align*}
+\end{proof}
+
+
+\subsection*{2.23 (i)} VALID
+\subsection*{2.23 (ii)} VALID
+\subsection*{2.23 (iii)} NOT VALID
+\begin{proof}
+Take $\varphi = (0,1)$ and $\psi = (1,2)$
+\end{proof}
+\subsection*{2.23 (iv)} VALID
+\begin{proof}
+Let $\Gamma = \{\neg \neg \varphi \rightarrow \neg \neg \psi, \neg(\varphi \rightarrow \psi)\}$
+\begin{align*}
+    \Gamma, (\varphi \rightarrow \psi) &&\vdash&& \bot \\
+\end{align*}
+\end{proof}
+\subsection*{2.23 (v)} VALID
+\subsection*{2.23 (vi)} VALID
+
 
 \subsection*{2.32}
 
@@ -222,6 +392,21 @@ Conversely, suppose $\varphi$ is a formula which is forced in all one-element mo
 \end{proof}
 
 \subsection*{2.34}
+
+\begin{proof}
+Let $\varphi$ be a classical tautology. We want to show that $\neg \neg \varphi$ is an intuitionistic tautology. For that, let $(\mathcal{C}, \leq, \Vdash)$ be any Kripke model. Let $P$ be the set of all propositional variables appearing in $\varphi$. Consider $c \in \mathcal{C}$. Suppose $c$ doesn't determine some propositional variable $p \in P$ so in particular, since $c \not \Vdash \neg p$ implies that there exists a state $c' \geq c$ such that $c' \Vdash p$. Since $P$ is finite, we can find a state $c' \geq c$ which determines $p$ $\forall p \in P$. Now consider the valuation $v_{c'}$, defined by $c'$. Since $\varphi$ is a tautology, $v_{c'}(\varphi) = 1$ and hence $c' \Vdash \varphi$ by the previous result. Thus $c \not \Vdash \neg \varphi$. 
+
+Therefore, given $c \in \mathcal{C}$, $\forall c' \geq c$, since $c' \not \Vdash \neg \varphi$, we conclude that $c \Vdash \neg \neg \varphi$.
+\end{proof}
+
+\subsection*{3.12}
+\begin{proof}
+This only guarantees that the type of $M$ is an instance of $\tau$.
+\end{proof}
+
+\subsection*{3.15}
+\begin{proof}
+\end{proof}
 
 \vspace{1in} %Leave more space for comments!
 
