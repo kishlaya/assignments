@@ -27,7 +27,7 @@
 
 We first prove a sequence a lemmas.
 
-\textbf{Lemma}: If $x \neq y$ and $x \not \in FV(L)$ then $$M[x:=N][y:=L] = M[y:=L][x:=N[y:=L]]]$$
+\textbf{Lemma}: If $x \neq y$ and $x \not \in FV(L)$ then $$M[x:=N][y:=L] = M[y:=L][x:=N[y:=L]]$$
 
 \begin{proof}
 By induction on $M$.
@@ -230,7 +230,7 @@ $$v(\neg \varphi) = v(\varphi \rightarrow \bot) = v(\varphi) \implies v(\bot) = 
 
 Now, to show that $w(\varphi) = 0$, we induct on the size of the formula $\varphi$:
 \begin{itemize}
-    \item For $\varphi = p$, we have $w(p) = 0$ by definition of $w$ as $p \not \in G$
+    \item For $\varphi = p$, we have $w(p) = 0$ by definition of $w$ as $v(p) \not \in G$ (by the above claim).
     \item For $\varphi = \alpha \vee \beta$, we note that $\alpha \leq \alpha \vee \beta$ and so if $\alpha \in G \implies \alpha \vee \beta = \varphi \in G$. Thus, $\alpha \not \in G$. By inductive hypothesis, $w(\alpha) = 0$. Similarly, $w(\beta) = 0$. Hence, $w(\varphi) = w(\alpha \vee \beta) = w(\alpha) \vee w(\beta) = 0 \vee 0 = 0$
     \item For $\varphi = \alpha \wedge \beta$. If $v(\alpha) \in G$ and $v(\beta) \in G$ then $v(\alpha) \wedge v(\beta) \in G \implies v(\varphi) \in G$. Hence we can assume WLOG $v(\alpha) \not \in G$. So, by inductive hypothesis $w(\alpha) = 0$. Thus, $w(\varphi) = w(\alpha) \wedge w(\beta) = 0 \wedge w(\beta) = 0$
     \item For $\varphi = \alpha \rightarrow \beta$. So, $w(\varphi) = w(\alpha) \Rightarrow w(\beta)$. But for boolean algebras, we know that $c \Rightarrow d = -c \vee d$. So, $w(\varphi) = -w(\alpha) \vee w(\beta)$. As in the second case, $-w(\alpha) = 0$ and $w(\beta) = 0$.
@@ -261,6 +261,16 @@ Consider any valuation $v$ in $\mathbb{B}$. We want to show that $v \models \var
 
 \begin{proof}
 In the subsequent sections, we shall consider the Heyting algebra $\mathcal{H} = \mathbb{R}$ with all open subsets. 
+
+\begin{align*}
+    (p \rightarrow q) \rightarrow p, \neg p, p &&\vdash&& \bot && &&(\rightarrow E) \\
+    (p \rightarrow q) \rightarrow p, \neg p, p &&\vdash&& q && &&(\bot E)\\
+    (p \rightarrow q) \rightarrow p, \neg p &&\vdash&& p \rightarrow q && &&(\rightarrow I)\\
+    (p \rightarrow q) \rightarrow p, \neg p &&\vdash&& p && &&(\rightarrow E)\\
+    (p \rightarrow q) \rightarrow p, \neg p &&\vdash&& \bot && &&(\rightarrow E)\\
+    (p \rightarrow q) \rightarrow p &&\vdash&& \neg \neg p && &&(\rightarrow I)\\
+    &&\vdash&& ((p \rightarrow q) \rightarrow p) \rightarrow \neg \neg p && &&(\rightarrow I)\\
+\end{align*}
 \end{proof}
 
 \subsection*{2.21 (ii)} VALID
@@ -275,7 +285,7 @@ Let $\Gamma = \{(((p \rightarrow q) \rightarrow p) \rightarrow p) \rightarrow q,
     \Gamma &&\vdash&& p && &&(\rightarrow E) \\
     (((p \rightarrow q) \rightarrow p) \rightarrow p) \rightarrow q &&\vdash&& ((p \rightarrow q) \rightarrow p) \rightarrow p && &&(\rightarrow I) \\
     (((p \rightarrow q) \rightarrow p) \rightarrow p) \rightarrow q &&\vdash&& q && &&(\rightarrow E) \\
-    &&\vdash&& ((((p \rightarrow q) \rightarrow p) \rightarrow p) \rightarrow q) q && &&(\rightarrow I) \\
+    &&\vdash&& ((((p \rightarrow q) \rightarrow p) \rightarrow p) \rightarrow q) \rightarrow q && &&(\rightarrow I) \\
 \end{align*}
 \end{proof}
 
@@ -320,8 +330,28 @@ Consider the valuation $v$ on $\mathcal{H}$ defined as follows: $v(p) = (0, \inf
 \end{proof}
 
 \subsection*{2.21 (vi)} NOT VALID
+\begin{proof}
+Consider the valuation $v$ on $\mathcal{H}$ defined as follows: $v(p) = (0, \infty)$ and $v(q) = \phi$ and $v(r) = (0,1)$. Then we get that
+\begin{align*}
+    v(q \vee r) &&=&& (0,1) \\
+    v(p \rightarrow q \vee r) &&=&& Int[(-\infty, 0] \cup (0,1)] = (-\infty, 1) \\
+    v(p \rightarrow q) &&=&& Int[(-\infty, 0]] = (-\infty, 0) \\
+    v((p \rightarrow q) \vee r) &&=&& (-\infty, 0) \cup (0,1) \\
+    v((p \rightarrow q \vee r) \rightarrow (p \rightarrow q) \vee r) &&=&& Int[[1, \infty) \cup (-\infty, 0) \cup (0,1)] = \mathbb{R} \setminus \{0\} \\
+\end{align*}
+\end{proof}
 
 \subsection*{2.21 (vii)} NOT VALID
+\begin{proof}
+Consider the valuation $v$ on $\mathcal{H}$ defined as follows: $v(p) = \mathbb{R} \setminus \{0\}$ and $v(q) = (-\infty, 0)$ and $v(r) = (0,\infty)$. Then we get that
+\begin{align*}
+    v(p \rightarrow q \vee r) &&=&& Int[\{0\} \cup \mathbb{R} \setminus \{0\}] &&=&& \mathbb{R} \\
+    v(p \rightarrow q) &&=&& Int[\{0\} \cup (-\infty, 0)] &&=&& (-\infty, 0) \\
+    v(p \rightarrow r) &&=&& Int[\{0\} \cup (0, \infty)] &&=&& (0, \infty) \\
+    v((p \rightarrow q) \vee (p \rightarrow r)) &&&& &&=&& \mathbb{R} \setminus \{0\} \\
+    v((p \rightarrow q \vee r) \rightarrow (p \rightarrow q) \vee (p \rightarrow r)) &&=&& Int[\phi \cup \mathbb{R} \setminus \{0\}] &&=&& \mathbb{R} \setminus \{0\} \\
+\end{align*}
+\end{proof}
 
 \subsection*{2.21 (viii)} VALID
 \begin{proof}
@@ -341,9 +371,14 @@ Consider the valuation $v$ on $\mathcal{H}$ defined as follows: $v(p) = (0, \inf
 \subsection*{2.21 (ix)} VALID
 \begin{proof}
 \begin{align*}
-    p \rightarrow \neg p, p &&\vdash&& \neg p && &&(\rightarrow E) \\
-    p \rightarrow \neg p, p &&\vdash&& \bot && &&(\rightarrow E) \\
-    p \rightarrow \neg p &&\vdash&& \neg p && &&(\rightarrow I) \\
+    p, p \rightarrow \neg p, \neg p \rightarrow p &&\vdash&& \neg p && &&(\rightarrow E) \\
+    p, p \rightarrow \neg p, \neg p \rightarrow p &&\vdash&& \bot && &&(\rightarrow E) \\
+    p \rightarrow \neg p, \neg p \rightarrow p &&\vdash&& \neg p && &&(\rightarrow I) \\
+    p \rightarrow \neg p, \neg p \rightarrow p &&\vdash&& p && &&(\rightarrow E) \\
+    p \rightarrow \neg p, \neg p \rightarrow p &&\vdash&& \bot && &&(from previous two steps) \\
+    p \rightarrow \neg p &&\vdash&& (\neg p \rightarrow p) \rightarrow \bot && &&(\rightarrow I) \\
+    &&\vdash&& (p \rightarrow \neg p) \rightarrow ((\neg p \rightarrow p) \rightarrow \bot) && &&(\rightarrow I) \\
+    &&\vdash&& (p \rightarrow \neg p) \rightarrow \neg (\neg p \rightarrow p) && && \\
 \end{align*}
 \end{proof}
 
@@ -380,7 +415,7 @@ We proceed by induction on structure of $\varphi$:
     \item $\varphi = \alpha \rightarrow \beta$. So, $v_c(\varphi) = v_c(\alpha \rightarrow \beta) = v_c(\alpha) \Rightarrow v_c(\beta)$. But since, $v_c$ is a valuation in a boolean algebra, $v_c(\alpha) \Rightarrow v_c(\beta) = -v_c(\alpha) \vee v_c(\beta) = v_c(\neg \alpha) \vee v_c(\beta)$. Thus, $v_c(\varphi) = v_c(\neg \alpha) \vee v_c(\beta) = 1$. Now suppose, $v_c(\beta) = 1 \implies c \Vdash \beta$ and so by monotonicity property, $\forall$ $c' \geq c$, $c' \Vdash \beta$, so for any $c' \geq c$ with $c' \Vdash \alpha$, we have that $c' \Vdash \beta$. Hence $c \Vdash \alpha \rightarrow \beta \implies c \Vdash \varphi$. Now suppose $v_c(\beta) \neq 1$, then $v_c(\neg \alpha) = 1 \implies c \Vdash \neg \alpha \implies$ $\forall$ $c' \geq c$, we have $c' \not \Vdash \alpha$. Hence, the statement $\forall$ $c' \geq c$ with $c' \Vdash \alpha \implies c' \Vdash \beta$ holds vacuously true. Therefore, we get $c \Vdash \varphi$.
 \end{itemize}
 
-Now, we show that a formula is a classical tautology iff if is it is forced in every one-element model.
+Now, we show that a formula is a classical tautology iff it is forced in every one-element model.
 
 For that, we first show that every one-element model uniquely determines a valuation.
 
