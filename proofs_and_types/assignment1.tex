@@ -288,9 +288,7 @@ $$(a \wedge b) \vee c = (a \vee c) \wedge (b \vee c)$$
 
 First note that, $a \wedge b \leq a \leq a \vee c$ and $a \wedge b \leq b \leq b \vee c$. Hence $a \wedge b \leq (a \vee c) \wedge (b \vee c)$. Next, $c \leq a \vee c$ and $c \leq b \vee c$ and so $c \leq (a \vee c) \wedge (b \vee c)$. Therefore, we have established. $(a \wedge b) \vee c \leq (a \vee c) \wedge (b \vee c)$.
 
-For the other inequality, $(a \vee c) \wedge (b \vee c) \leq (a \wedge (b \vee c)) \vee (c \wedge (b \vee c))$, by the hypothesis. But, $a \wedge (b \vee c) \leq a$ and $c \wedge (b \vee c) \leq c$.
-
-Similarly, 
+For the other inequality, note that, $(a \wedge b) \vee c = (a \wedge b) \vee (a \wedge c) \vee c \geq (a \wedge (b \vee c)) \vee c = (a \wedge (b \vee c)) \vee (c \wedge (b \vee c)) \geq (a \vee c) \wedge (b \vee c)$, where both the inequalities follow from the assumption given in the problem.
 
 \end{proof}
 
