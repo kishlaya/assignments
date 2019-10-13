@@ -22,16 +22,18 @@
 \vspace{0.5in}
 
 \subsection*{1.8}
+Prove the Weak Church Rosser Theorem. For all $M_1, M_2, M_3 \in \Lambda$, if $M_1 \rightarrow_\beta M_2$ and $M_1 \rightarrow_\beta M_3$ then there is a term $M_4 \in \Lambda$ such that $M_2 \twoheadrightarrow_\beta M_4$ and $M_3 \twoheadrightarrow_\beta M_4$. \\
 
 \begin{proof}
 
 We first prove a sequence a lemmas.
 
-\textbf{Lemma}: If $x \neq y$ and $x \not \in FV(L)$ then $$M[x:=N][y:=L] = M[y:=L][x:=N[y:=L]]$$
+\textbf{Lemma 1}: If $x \neq y$ and $x \not \in FV(L)$ then $$M[x:=N][y:=L] = M[y:=L][x:=N[y:=L]]$$
 
 \begin{proof}
 By induction on $M$.
-\textsl{Case}: $M=x$, since $x \neq y$
+\begin{itemize}
+\item \textsl{Case}: $M=x$, since $x \neq y$
 \begin{align*}
     M[x:=N][y:=L] &&=&& x[x:=N][y:=L] \\
     &&=&& N[y:=L] \\
@@ -40,26 +42,26 @@ By induction on $M$.
     &&=&& M[y:=L][x:=N[y:=L]] \\
 \end{align*}
 
-\textsl{Case}: $M=y$
+\item \textsl{Case}: $M=y$
 \begin{align*}
     M[x:=N][y:=L] &&=&& L \\
     &&=&& M[y:=L][x:=N[y:=L]] \\
 \end{align*}
 
-\textsl{Case}: $M=x$ where $z \neq x$ and $z \neq y$
+\item \textsl{Case}: $M=x$ where $z \neq x$ and $z \neq y$
 \begin{align*}
     M[x:=N][y:=L] &&=&& z \\
     &&=&& M[y:=L][x:=N[y:=L]] \\
 \end{align*}
 
-\textsl{Case}: $M=\lambda z.P$ where $z \neq x$ and $z \neq y$
+\item \textsl{Case}: $M=\lambda z.P$ where $z \neq x$ and $z \neq y$
 \begin{align*}
     M[x:=N][y:=L] &&=&& \lambda z.P[x:=N][y:=L] \\
     &&=&& \lambda z.P[y:=L][x:=N[y:=L]] \\
     &&=&& M[y:=L][x:=N[y:=L]] \\
 \end{align*}
 
-\textsl{Case}: $M = P Q$
+\item \textsl{Case}: $M = P Q$
 \begin{align*}
     M[x:=N][y:=L] &&=&& (P Q)[x:=N][y:=L] \\
     &&=&& (P[x:=N][y:=L]) (Q[x:=N][y:=L]) \\
@@ -67,10 +69,10 @@ By induction on $M$.
     &&=&& (P Q)[y:=L][x:=N[y:=L]] \\
     &&=&& M[y:=L][x:=N[y:=L]] \\
 \end{align*}
-
+\end{itemize}
 \end{proof}
 
-\textbf{Lemma}: Assume that $P, P' \in \Lambda$ are such that $P \twoheadrightarrow_{\beta} P'$ then for all $x \in V$ and $Q \in \Lambda$:
+\textbf{Lemma 2}: Assume that $P, P' \in \Lambda$ are such that $P \twoheadrightarrow_{\beta} P'$ then for all $x \in V$ and $Q \in \Lambda$:
 
 (i) $\lambda x.P \twoheadrightarrow_{\beta} \lambda x.P'$ \\
 (ii) $P Q \twoheadrightarrow_{\beta} P' Q$ \\
@@ -79,29 +81,69 @@ By induction on $M$.
 \begin{proof}
 By induction on the derivation of $P \twoheadrightarrow_{\beta} P'$.
 
-\textsl{Case}: $P \rightarrow_{\beta} P'$ then clearly, $\lambda x.P \rightarrow_{\beta} \lambda x.P'$  and $P Q \rightarrow_{\beta} P' Q$ and $Q P \rightarrow_{\beta} Q P'$ \\
+\begin{itemize}
+\item \textsl{Case}: $P \rightarrow_{\beta} P'$ then clearly, $\lambda x.P \rightarrow_{\beta} \lambda x.P'$  and $P Q \rightarrow_{\beta} P' Q$ and $Q P \rightarrow_{\beta} Q P'$ \\
 
-\textsl{Case}: there exists $P''$ such that $P \twoheadrightarrow_{\beta} P''$ and $P'' \rightarrow_{\beta} P'$ then by inductive hypothesis, $\lambda x.P \twoheadrightarrow_{\beta} \lambda x.P'$ and $\lambda x.P'' \rightarrow_{\beta} \lambda x.P'$  and so $\lambda x.P \twoheadrightarrow_{\beta} \lambda x.P'$. 
+\item \textsl{Case}: there exists $P''$ such that $P \twoheadrightarrow_{\beta} P''$ and $P'' \rightarrow_{\beta} P'$ then by inductive hypothesis, $\lambda x.P \twoheadrightarrow_{\beta} \lambda x.P'$ and $\lambda x.P'' \rightarrow_{\beta} \lambda x.P'$  and so $\lambda x.P \twoheadrightarrow_{\beta} \lambda x.P'$. 
 
 Again, by inductive hypothesis, $P Q \twoheadrightarrow_{\beta} P'' Q$ and $P'' Q \rightarrow_{\beta} P' Q$ and so $P Q \twoheadrightarrow_{\beta} P' Q$.
 
 Similarly, by inductive hypothesis, $Q P \twoheadrightarrow_{\beta} Q P''$ and $Q P'' \rightarrow_{\beta} Q P'$ and so $Q P \twoheadrightarrow_{\beta} Q P'$.
 
-\textsl{Case}: $P = P'$ then clearly, $\lambda x.P = \lambda x.P'$  and $P Q = P' Q$ and $Q P = Q P'$ \\
+\item \textsl{Case}: $P = P'$ then clearly, $\lambda x.P = \lambda x.P'$  and $P Q = P' Q$ and $Q P = Q P'$ \\
+\end{itemize}
 \end{proof}
 
-\textbf{Lemma}: For all $P, P', Q \in \Lambda$ if $P \rightarrow_{\beta} P'$ then also $P[x:=Q] \rightarrow_{\beta} P'[x:=Q]$
+\textbf{Lemma 3}: For all $P, P', Q \in \Lambda$ if $P \rightarrow_{\beta} P'$ then also $P[x:=Q] \rightarrow_{\beta} P'[x:=Q]$
 \begin{proof}
 By induction on the derivation of $P \rightarrow_{\beta} P'$.
+\begin{itemize}
+\item \textsl{Case}: $P = (\lambda y. R) S$ and $P' = R[y:=S]$. Then we get
+\begin{align*}
+    P[x:=Q] &&=&& ((\lambda y. R) S)[x:=Q] \\
+    &&=&& (\lambda y. R[x:=Q]) (S[x:=Q]) \\
+    &&\rightarrow_\beta&& R[x:=Q][y:=S[x:=Q]] \\
+    &&=&& R[y:=S][x:=Q]] &&&& \text{(by lemma 1)}\\
+    &&=&& P'[x:=Q]
+\end{align*}
+
+\item \textsl{Case}: $P = \lambda y. R$ and $P' = \lambda y. R'$ such that $R \rightarrow_\beta R'$. Then we get
+\begin{align*}
+    P[x:=Q] &&=&& (\lambda y. R)[x:=Q] \\
+    &&=&& \lambda y. R[x:=Q] \\
+    &&\rightarrow_\beta&& \lambda y. R'[x:=Q] \\
+    &&=&& (\lambda y. R')[x:=Q] \\
+    &&=&& P'[x:=Q]
+\end{align*}
+
+\item \textsl{Case}: $P = R S$ and $P' = R' S$ such that $R \rightarrow_\beta R'$. Then we get
+\begin{align*}
+    P[x:=Q] &&=&& (R S)[x:=Q] \\
+    &&=&& R[x:=Q] S[x:=Q] \\
+    &&\rightarrow_\beta&& R'[x:=Q] S[x:=Q] \\
+    &&=&& (R' S)[x:=Q] \\
+    &&=&& P'[x:=Q]
+\end{align*}
+
+\item \textsl{Case}: $P = R S$ and $P' = R S'$ such that $S \rightarrow_\beta S'$. Then we get
+\begin{align*}
+    P[x:=Q] &&=&& (R S)[x:=Q] \\
+    &&=&& R[x:=Q] S[x:=Q] \\
+    &&\rightarrow_\beta&& R[x:=Q] S'[x:=Q] \\
+    &&=&& (R S')[x:=Q] \\
+    &&=&& P'[x:=Q]
+\end{align*}
+\end{itemize}
 \end{proof}
 
-\textbf{Lemma}: For all $P,Q,Q' \in \Lambda$ if $Q \rightarrow_{\beta} Q'$ then also $P[x:=Q] \twoheadrightarrow_{\beta} P[x:=Q']$
+\textbf{Lemma 4}: For all $P,Q,Q' \in \Lambda$ if $Q \rightarrow_{\beta} Q'$ then also $P[x:=Q] \twoheadrightarrow_{\beta} P[x:=Q']$
 \begin{proof}
 By induction on structure of $P$.
 
-\textsl{Case}: $P=x$ then $P[x:=Q] = Q \rightarrow_{\beta} Q' = P[x:=Q']$ \\
-\textsl{Case}: $P=y$ then $P[x:=Q] = y \rightarrow_{\beta} y = P[x:=Q']$ \\
-\textsl{Case}: $P=\lambda y.P'$ then
+\begin{itemize}
+\item \textsl{Case}: $P=x$ then $P[x:=Q] = Q \rightarrow_{\beta} Q' = P[x:=Q']$ \\
+\item \textsl{Case}: $P=y$ then $P[x:=Q] = y \rightarrow_{\beta} y = P[x:=Q']$ \\
+\item \textsl{Case}: $P=\lambda y.P'$ then
 \begin{align*}
     P[x:=Q] &&=&& (\lambda y.P')[x:=Q] \\
     &&=&& \lambda y.P'[x:=Q] \\
@@ -109,7 +151,7 @@ By induction on structure of $P$.
     &&=&& (\lambda y.P')[x:=Q'] \\
     &&=&& P[x:=Q']
 \end{align*}
-\textsl{Case}: $P = P_1 P_2$ then
+\item \textsl{Case}: $P = P_1 P_2$ then
 \begin{align*}
     P[x:=Q] &&=&& (P_1 P_2)[x:=Q] \\
     &&=&&  (P_1[x:=Q])(P_2[x:=Q]) \\
@@ -119,21 +161,58 @@ By induction on structure of $P$.
     &&=&& (P_1 P_2)[x:=Q'] \\
     &&=&& P[x:=Q']
 \end{align*}
+\end{itemize}
 \end{proof}
 
 Now, we can finally present the proof of Weak Church Rosser property.
 
 We proceed by induction on derivation of $M_1 \rightarrow_{\beta} M_2$.
 
-\textsl{Case}: $M_1 = (\lambda x. P) Q$ and $M_2 = P[x:=Q]$. Then either 
+\begin{itemize}
+\item \textsl{Case}: $M_1 = (\lambda x. P) Q$ and $M_2 = P[x:=Q]$. Then 
 
+Either $M_3 = (\lambda x. P') Q$ such that $P \rightarrow_\beta P'$. Then set $M_4 = P'[x:=Q]$ and note that both $M_2 \twoheadrightarrow_\beta M_4$ (by Lemma 3) and $M_3 \twoheadrightarrow_\beta M_4$ (by Lemma 2).
 
+Or either $M_3 = (\lambda x. P) Q'$ such that $Q \rightarrow_\beta Q'$. Then set $M_4 = P[x:=Q']$ and note that both $M_2 \twoheadrightarrow_\beta M_4$ (by Lemma 4) and $M_3 \twoheadrightarrow_\beta M_4$ (by substitution).
 
+\item \textsl{Case}: $M_1 = \lambda x. P$ and $M_2 = \lambda x. P'$ because $P \rightarrow_\beta P'$. Then $M_3$ must be of the form $\lambda x. P''$ such that $P \rightarrow_\beta P''$. Then by inductive hypothesis, there exists a term $Q$ such that $P' \rightarrow_\beta Q$ and $P'' \rightarrow_\beta Q$. Hence setting $M_4 = \lambda x. Q$ we get the sought term.
+
+\item \textsl{Case}: $M_1 = P Q$ and $M_2 = P' Q$ such that $P \rightarrow_\beta P'$ then
+
+Either $M_3 = P'' Q$ such that $P \rightarrow_\beta P''$. By inductive hypothesis, there exists a term $R$ such that $P' \rightarrow_\beta R$ and $P'' \rightarrow_\beta R$. Hence $M_4 = R Q$ is the sought term.
+
+Or $M_3 = P Q'$ such that $Q \rightarrow_\beta Q'$. Then note that both $M_2 \rightarrow_\beta P' Q'$ and $M_3 \rightarrow_\beta P' Q'$. Hence $M_4 = P' Q'$ as desired.
+\end{itemize}
+
+\end{proof}
+
+\subsection*{1.14}
+Consider the fixed point combinator 
+$$Y = \lambda f.(\lambda x.f (xx))(\lambda x.f (xx))$$
+Show that $F(YF) =_\beta YF$ holds for all $F$. \\
+
+\begin{proof}
+\begin{align*}
+    YF &&=&& (\lambda f.(\lambda x.f (xx))(\lambda x.f (xx)))F \\
+    &&\rightarrow_\beta&& ((\lambda x.f (xx))(\lambda x.f (xx)))[f:=F] \\
+    &&=&& (\lambda x.F (xx))(\lambda x.F (xx)) \\
+    &&\rightarrow_\beta&& (F (xx))[x:=(\lambda x.F (xx))] \\
+    &&=&& F ((\lambda x.F (xx))(\lambda x.F (xx))) \\
+\end{align*}
+
+And also,
+\begin{align*}
+    F(YF) &&=&& F\left((\lambda f.(\lambda x.f (xx))(\lambda x.f (xx)))F\right) \\
+    &&\rightarrow_\beta&& F\left(((\lambda x.f (xx))(\lambda x.f (xx)))[f:=F]\right) \\
+    &&=&& F\left((\lambda x.F (xx))(\lambda x.F (xx))\right) \\
+\end{align*}
+
+Hence, $YF =_\beta F(YF)$
 \end{proof}
 
 
 \subsection*{2.5}
-(Statement of problem goes here.)\\
+Show that intuitionistic propositional logic is consistent, that is $\not \vdash \bot$. \\
 
 \begin{proof}
 Suppose not, that is $\vdash \bot$.
@@ -147,7 +226,7 @@ According to the definition, $\widetilde{v}(\bot) = 0$, where $\widetilde{v}$ is
 
 
 \subsection*{2.6}
-(Statement of problem goes here.)\\
+Let $(A, \vee, \wedge)$ be an algebra with two binary operations (written in infix notation). Assume that the equations (i)-(iv) of Lemma 2.3.4 hold for all elements of A. Define $a < b$ by $a \vee b = b$. Prove that $(A, \leq)$ is a lattice, where suprema and infima are given by $\vee$ and $\wedge$. \\ 
 
 \begin{proof}
 Lemma 2.3.4 says that the following are valid:
@@ -182,9 +261,10 @@ $a = a \wedge b \implies a \vee b = (a \wedge b) \vee b = (b \wedge a) \vee b = 
 \end{proof}
 
 \subsection*{2.8}
+Let A be a lattice satisfying $(a \vee b) \wedge c \leq (a \wedge c) \vee (b \wedge c)$, for all $a, b, c$. Show that A is distributive. \\
 
 \begin{proof}
-We shall show that 
+We shall first show that:
 $$(a \wedge c) \vee (b \wedge c) \leq (a \vee b) \wedge c$$ 
 Then from anti-symmetric property of $\leq$, the result follows.
 
@@ -202,16 +282,36 @@ $$b \wedge c \leq b \leq a \vee b \text{ \& } b \wedge c \leq c \implies b \wedg
 
 Now using, property 1 on the above two inequalities, we get our desired result.
 
+Now we show the other distributive lattice property holds, namely:
+
+$$(a \wedge b) \vee c = (a \vee c) \wedge (b \vee c)$$
+
+First note that, $a \wedge b \leq a \leq a \vee c$ and $a \wedge b \leq b \leq b \vee c$. Hence $a \wedge b \leq (a \vee c) \wedge (b \vee c)$. Next, $c \leq a \vee c$ and $c \leq b \vee c$ and so $c \leq (a \vee c) \wedge (b \vee c)$. Therefore, we have established. $(a \wedge b) \vee c \leq (a \vee c) \wedge (b \vee c)$.
+
+For the other inequality, $(a \vee c) \wedge (b \vee c) \leq (a \wedge (b \vee c)) \vee (c \wedge (b \vee c))$, by the hypothesis. But, $a \wedge (b \vee c) \leq a$ and $c \wedge (b \vee c) \leq c$.
+
+Similarly, 
+
 \end{proof}
 
 \subsection*{2.13}
+Assume that $\mathcal{B}, v \not \vDash \varphi$, for some Boolean algebra $\mathcal{B}$ and some $\varphi$ and $v$. Show that there exists a prime filter $F$ in $\mathcal{B}$, with $v(\neg \varphi) \in F$. Then define a binary valuation by $w(p) = 1$ iff $v(p) \in F$ and show that $w(\varphi) = 0$. \\
 
 \begin{proof}
 Recall the following result:
 
 \textbf{Theorem}: Let $F$ be a proper filter in $\mathcal{H}$ and $a \not \in F$. There exists a prime filter $G$ such that $F \subseteq G$ and $a \not \in G$
 
-First note that, since $v \not \models \varphi \implies v(\varphi) \neq 1 \implies -v(\varphi) \neq 0$ as $\mathcal{B}$ is a Boolean algebra so $v(\varphi) \vee -v(\varphi) = 1$
+Now, we state and prove another result regarding prime filters.
+
+\textbf{Proposition}: Let $G$ be a prime filter of a boolean algebra. Then $\alpha \in G$ iff $-\alpha \not \in G$
+
+\begin{proof}: Let $\alpha \in G$. Then since $\alpha \cap -\alpha = 0$ and $0 \not \in G$ (as $G$ is proper), we get that $-\alpha \not \in G$.
+
+Now suppose, $-\alpha \not \in G$. Since $-\alpha \cup \alpha = 1$ and $1 \in G$, by the property of prime filters we get that $\alpha \in G$.
+\end{proof}
+
+Now we note that, since $v \not \models \varphi \implies v(\varphi) \neq 1 \implies -v(\varphi) \neq 0$ as $\mathcal{B}$ is a Boolean algebra so $v(\varphi) \vee -v(\varphi) = 1$
 
 Let $F = \{a : -v(\varphi) \leq a\}$. Then F is a proper filter because:
 \begin{itemize}
@@ -233,12 +333,18 @@ Now, to show that $w(\varphi) = 0$, we induct on the size of the formula $\varph
     \item For $\varphi = p$, we have $w(p) = 0$ by definition of $w$ as $v(p) \not \in G$ (by the above claim).
     \item For $\varphi = \alpha \vee \beta$, we note that $\alpha \leq \alpha \vee \beta$ and so if $\alpha \in G \implies \alpha \vee \beta = \varphi \in G$. Thus, $\alpha \not \in G$. By inductive hypothesis, $w(\alpha) = 0$. Similarly, $w(\beta) = 0$. Hence, $w(\varphi) = w(\alpha \vee \beta) = w(\alpha) \vee w(\beta) = 0 \vee 0 = 0$
     \item For $\varphi = \alpha \wedge \beta$. If $v(\alpha) \in G$ and $v(\beta) \in G$ then $v(\alpha) \wedge v(\beta) \in G \implies v(\varphi) \in G$. Hence we can assume WLOG $v(\alpha) \not \in G$. So, by inductive hypothesis $w(\alpha) = 0$. Thus, $w(\varphi) = w(\alpha) \wedge w(\beta) = 0 \wedge w(\beta) = 0$
-    \item For $\varphi = \alpha \rightarrow \beta$. So, $w(\varphi) = w(\alpha) \Rightarrow w(\beta)$. But for boolean algebras, we know that $c \Rightarrow d = -c \vee d$. So, $w(\varphi) = -w(\alpha) \vee w(\beta)$. As in the second case, $-w(\alpha) = 0$ and $w(\beta) = 0$.
+    \item For $\varphi = \alpha \rightarrow \beta$. So, $w(\varphi) = w(\alpha) \Rightarrow w(\beta)$. But for boolean algebras, we know that $c \Rightarrow d = -c \vee d$. So $w(\varphi) = -w(\alpha) \vee w(\beta)$. Similarly, $v(\varphi) = -v(\alpha) \vee v(\beta) \implies -v(\alpha) \not \in G$ and $v(\beta) \not \in G$ as $v(\varphi) \not \in G$.
+    Hence $v(\alpha) \in G$ (by above proposition) $\implies w(\alpha) = 1 \implies -w(\alpha) = 0$ and $w(\beta) = 0$ (by inductive hypothesis).
 \end{itemize}
 Hence, $w(\varphi) = 0$
 \end{proof}
 
 \subsection*{2.14}
+Let $\mathcal{B}_0$ be a Boolean algebra with $0 \neq 1$, and let $\mathbb{B}$ be the two-element Boolean algebra of truth values. Show that the following three conditions are equivalent:
+
+(i) $\mathbb{B} \vDash \varphi$ \\
+(ii) $\mathcal{B}_0 \vDash \varphi$ \\
+(iii) $\mathcal{B} \vDash \varphi$, for all Boolean algebras $\mathcal{B}$ \\
 
 \begin{proof}
 We show the following sequence:
@@ -257,11 +363,10 @@ Consider any valuation $v$ in $\mathbb{B}$. We want to show that $v \models \var
 
 \end{proof}
 
-\subsection*{2.21 (i)} VALID
+\subsection*{2.21 (i)} 
+$((p \rightarrow q) \rightarrow p) \rightarrow \neg \neg p$ is VALID
 
 \begin{proof}
-In the subsequent sections, we shall consider the Heyting algebra $\mathcal{H} = \mathbb{R}$ with all open subsets. 
-
 \begin{align*}
     (p \rightarrow q) \rightarrow p, \neg p, p &&\vdash&& \bot && &&(\rightarrow E) \\
     (p \rightarrow q) \rightarrow p, \neg p, p &&\vdash&& q && &&(\bot E)\\
@@ -273,7 +378,8 @@ In the subsequent sections, we shall consider the Heyting algebra $\mathcal{H} =
 \end{align*}
 \end{proof}
 
-\subsection*{2.21 (ii)} VALID
+\subsection*{2.21 (ii)} 
+$((((p \rightarrow q) \rightarrow p) \rightarrow p) \rightarrow q) \rightarrow q$ is VALID
 \begin{proof}
 Let $\Gamma = \{(((p \rightarrow q) \rightarrow p) \rightarrow p) \rightarrow q, (p \rightarrow q) \rightarrow p\}$. Then 
 \begin{align*}
@@ -287,11 +393,16 @@ Let $\Gamma = \{(((p \rightarrow q) \rightarrow p) \rightarrow p) \rightarrow q,
     (((p \rightarrow q) \rightarrow p) \rightarrow p) \rightarrow q &&\vdash&& q && &&(\rightarrow E) \\
     &&\vdash&& ((((p \rightarrow q) \rightarrow p) \rightarrow p) \rightarrow q) \rightarrow q && &&(\rightarrow I) \\
 \end{align*}
+
+Furthermore, here is a lambda term of the given type: $$\lambda x^{(((p \rightarrow q) \rightarrow p) \rightarrow p) \rightarrow q}. x(\lambda y^{(p \rightarrow q) \rightarrow p}. y(\lambda z^{p}. x(\lambda u^{(p \rightarrow q) \rightarrow p}. z)))$$
 \end{proof}
 
-\subsection*{2.21 (iii)} NOT VALID
+\subsection*{2.21 (iii)} 
+$\neg p \vee \neg \neg p$ is NOT VALID
 
 \begin{proof}
+In the subsequent sections, we shall consider the Heyting algebra $\mathcal{H} = \mathbb{R}$ with all open subsets. 
+
 Consider the valuation $v$ on $\mathcal{H}$ defined as follows: $v(p) = (0,,\infty)$. Then we get that 
 
 \begin{align*}
@@ -302,7 +413,8 @@ Consider the valuation $v$ on $\mathcal{H}$ defined as follows: $v(p) = (0,,\inf
 
 \end{proof}
 
-\subsection*{2.21 (iv)} VALID
+\subsection*{2.21 (iv)} 
+$\neg p \vee \neg q \rightarrow \neg (p \wedge q)$ is VALID
 
 \begin{proof}
 Consider any valuation $v$ on $\mathcal{H}$. Let $v(p) = P \subseteq \mathbb{R}$ and $v(q) = Q \subseteq \mathbb{R}$. Then we get that
@@ -317,7 +429,8 @@ Consider any valuation $v$ on $\mathcal{H}$. Let $v(p) = P \subseteq \mathbb{R}$
 \end{align*}
 \end{proof}
 
-\subsection*{2.21 (v)} NOT VALID
+\subsection*{2.21 (v)} 
+$(p \rightarrow p \wedge q) \vee (q \rightarrow p \wedge q)$ is NOT VALID
 \begin{proof}
 Consider the valuation $v$ on $\mathcal{H}$ defined as follows: $v(p) = (0, \infty)$ and $v(q) = (-\infty, 0)$. Then we get that
 
@@ -329,7 +442,8 @@ Consider the valuation $v$ on $\mathcal{H}$ defined as follows: $v(p) = (0, \inf
 \end{align*}
 \end{proof}
 
-\subsection*{2.21 (vi)} NOT VALID
+\subsection*{2.21 (vi)} 
+$(p \rightarrow q \vee r) \rightarrow (p \rightarrow q) \vee r$ is NOT VALID
 \begin{proof}
 Consider the valuation $v$ on $\mathcal{H}$ defined as follows: $v(p) = (0, \infty)$ and $v(q) = \phi$ and $v(r) = (0,1)$. Then we get that
 \begin{align*}
@@ -341,7 +455,8 @@ Consider the valuation $v$ on $\mathcal{H}$ defined as follows: $v(p) = (0, \inf
 \end{align*}
 \end{proof}
 
-\subsection*{2.21 (vii)} NOT VALID
+\subsection*{2.21 (vii)} 
+$(p \rightarrow q \vee r) \rightarrow (p \rightarrow q) \vee (p \rightarrow r)$ is NOT VALID
 \begin{proof}
 Consider the valuation $v$ on $\mathcal{H}$ defined as follows: $v(p) = \mathbb{R} \setminus \{0\}$ and $v(q) = (-\infty, 0)$ and $v(r) = (0,\infty)$. Then we get that
 \begin{align*}
@@ -353,7 +468,8 @@ Consider the valuation $v$ on $\mathcal{H}$ defined as follows: $v(p) = \mathbb{
 \end{align*}
 \end{proof}
 
-\subsection*{2.21 (viii)} VALID
+\subsection*{2.21 (viii)} 
+$((p \vee \neg p) \rightarrow \neg q) \rightarrow \neg q$ is VALID
 \begin{proof}
 \begin{align*}
     (p \vee \neg p) \rightarrow \neg q, q, p &&\vdash&& p \vee \neg p && &&(\vee I)\\
@@ -368,7 +484,8 @@ Consider the valuation $v$ on $\mathcal{H}$ defined as follows: $v(p) = \mathbb{
 \end{align*}
 \end{proof}
 
-\subsection*{2.21 (ix)} VALID
+\subsection*{2.21 (ix)} 
+$(p \rightarrow \neg p) \rightarrow \neg (\neg p \rightarrow p)$ is VALID
 \begin{proof}
 \begin{align*}
     p, p \rightarrow \neg p, \neg p \rightarrow p &&\vdash&& \neg p && &&(\rightarrow E) \\
@@ -383,24 +500,69 @@ Consider the valuation $v$ on $\mathcal{H}$ defined as follows: $v(p) = \mathbb{
 \end{proof}
 
 
-\subsection*{2.23 (i)} VALID
-\subsection*{2.23 (ii)} VALID
-\subsection*{2.23 (iii)} NOT VALID
+\subsection*{2.23 (i)} 
+$\neg \neg(\varphi \rightarrow \psi) \rightarrow (\neg \neg \varphi \rightarrow \neg \neg \psi)$ is VALID
+
+\begin{proof}
+
+\end{proof}
+
+\subsection*{2.23 (ii)} 
+$\neg \neg(\varphi \wedge \psi) \rightarrow (\neg \neg \varphi \rightarrow \neg \neg \psi)$ is VALID
+
+\begin{proof}
+
+\end{proof}
+
+\subsection*{2.23 (iii)} 
+$\neg \neg(\varphi \vee \psi) \rightarrow (\neg \neg \varphi \rightarrow \neg \neg \psi)$ is NOT VALID
+
 \begin{proof}
 Take $\varphi = (0,1)$ and $\psi = (1,2)$
 \end{proof}
-\subsection*{2.23 (iv)} VALID
+
+\subsection*{2.23 (iv)} 
+$(\neg \neg \varphi \rightarrow \neg \neg \psi) \rightarrow \neg \neg (\varphi \rightarrow \psi)$ is VALID
+
 \begin{proof}
-Let $\Gamma = \{\neg \neg \varphi \rightarrow \neg \neg \psi, \neg(\varphi \rightarrow \psi)\}$
+Let $\Gamma = \{\neg \neg \varphi \rightarrow \neg \neg \psi, \neg(\varphi \rightarrow \psi)\}$. Suffices to show $\Gamma \vdash \bot$.
 \begin{align*}
-    \Gamma, (\varphi \rightarrow \psi) &&\vdash&& \bot \\
+    \Gamma, \varphi, \neg \varphi &&\vdash&& \bot &&&& (\rightarrow E) \\
+    \Gamma, \varphi, \neg \varphi &&\vdash&& \psi &&&& (\bot E) \\
+    \Gamma, \neg \varphi &&\vdash&& \varphi \rightarrow \psi &&&& (\rightarrow I) \\
+    \Gamma, \neg \varphi &&\vdash&& \bot &&&& (\rightarrow E) \\
+    \Gamma &&\vdash&& \neg \neg \varphi &&&& (\rightarrow E) \\
+    \Gamma &&\vdash&& \neg \neg \psi &&&& (\rightarrow E) \\
 \end{align*}
+
+Furthermore,
+\begin{align*}
+    \Gamma, \varphi, \psi &&\vdash&& \psi &&&& (Ax) \\
+    \Gamma, \psi &&\vdash&& \varphi \rightarrow \psi &&&& (\rightarrow I) \\
+    \Gamma, \psi &&\vdash&& \bot &&&& (\rightarrow E) \\
+    \Gamma &&\vdash&& \neg \psi &&&& (\rightarrow E) \\
+\end{align*}
+
+Hence, $\Gamma \vdash \bot$.
 \end{proof}
-\subsection*{2.23 (v)} VALID
-\subsection*{2.23 (vi)} VALID
+
+\subsection*{2.23 (v)} 
+$(\neg \neg \varphi \wedge \neg \neg \psi) \rightarrow \neg \neg (\varphi \rightarrow \psi)$ is VALID
+
+\begin{proof}
+
+\end{proof}
+
+\subsection*{2.23 (vi)} 
+$(\neg \neg \varphi \vee \neg \neg \psi) \rightarrow \neg \neg (\varphi \rightarrow \psi)$ is VALID
+
+\begin{proof}
+
+\end{proof}
 
 
 \subsection*{2.32}
+A state $c$ in a Kripke model $C$ determines $p$ iff either $c \Vdash p$ or $c \Vdash \neg p$. Define a binary valuation $v_c$ by $v_c(p) = 1$ iff $c \Vdash p$. Show that if $c$ determines all propositional variables in $\varphi$ then $v_c(\varphi) = 1$ implies $c \Vdash p$. Conclude that a formula is a classical tautology if and only if it is forced in all one-element models. \\
 
 \begin{proof}
 We proceed by induction on structure of $\varphi$:
@@ -427,6 +589,7 @@ Conversely, suppose $\varphi$ is a formula which is forced in all one-element mo
 \end{proof}
 
 \subsection*{2.34}
+Prove Glivenko's Theorem: A double negation of a classical tautology is intuitionistically valid. \\
 
 \begin{proof}
 Let $\varphi$ be a classical tautology. We want to show that $\neg \neg \varphi$ is an intuitionistic tautology. For that, let $(\mathcal{C}, \leq, \Vdash)$ be any Kripke model. Let $P$ be the set of all propositional variables appearing in $\varphi$. Consider $c \in \mathcal{C}$. Suppose $c$ doesn't determine some propositional variable $p \in P$ so in particular, since $c \not \Vdash \neg p$ implies that there exists a state $c' \geq c$ such that $c' \Vdash p$. Since $P$ is finite, we can find a state $c' \geq c$ which determines $p$ $\forall p \in P$. Now consider the valuation $v_{c'}$, defined by $c'$. Since $\varphi$ is a tautology, $v_{c'}(\varphi) = 1$ and hence $c' \Vdash \varphi$ by the previous result. Thus $c \not \Vdash \neg \varphi$. 
@@ -435,12 +598,25 @@ Therefore, given $c \in \mathcal{C}$, $\forall c' \geq c$, since $c' \not \Vdash
 \end{proof}
 
 \subsection*{3.12}
+What is wrong with the following reduction of problem (vi) to problem (i):
+
+\textsl{To answer $? \vdash M : \tau$ ask the question $? \vdash \lambda yz.y(zM)(zt_\tau)$} \\
+
 \begin{proof}
 This only guarantees that the type of $M$ is an instance of $\tau$.
 \end{proof}
 
 \subsection*{3.15}
+Show that strong normalization for $(\lambda_\rightarrow)$ a la Curry implies strong normalization for $(\lambda_\rightarrow)$ a la Church, and conversely. 
+
 \begin{proof}
+Suppose strong normalization holds for $(\lambda_{\rightarrow})$ a la Curry. For the sake of contradiction assume it doesn't hold for $(\lambda_{\rightarrow})$ a la Church. That implies there is a term $M$ such that it admits an infinite reduction sequence:
+$$M \rightarrow_\beta M_1 \rightarrow_\beta M_2 \rightarrow_\beta \cdots \rightarrow_\beta M_n \rightarrow_\beta \cdots$$
+But now, we can replace, each variable $x_\sigma$ by a fresh variable $x$ and consider the above sequence in Curry-typed lambda calculus, which gives us a contradiction. \\
+
+Conversely, suppose strong normalization holds for $(\lambda_{\rightarrow})$ a la Church. For the sake of contradiction assume it doesn't hold for $(\lambda_{\rightarrow})$ a la Curry. That implies there is a term $M$ such that it admits an infinite reduction sequence:
+$$M \rightarrow_\beta M_1 \rightarrow_\beta M_2 \rightarrow_\beta \cdots \rightarrow_\beta M_n \rightarrow_\beta \cdots$$
+But now, we can replace, each variable $x$ by a type-annotated variable $x_\sigma$ where $\sigma$ is the type of the variable $x$ for each term. and consider the above sequence in Church-typed lambda calculus, which gives us a contradiction.
 \end{proof}
 
 \vspace{1in} %Leave more space for comments!
