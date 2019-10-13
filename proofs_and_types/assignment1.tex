@@ -504,18 +504,44 @@ $(p \rightarrow \neg p) \rightarrow \neg (\neg p \rightarrow p)$ is VALID
 $\neg \neg(\varphi \rightarrow \psi) \rightarrow (\neg \neg \varphi \rightarrow \neg \neg \psi)$ is VALID
 
 \begin{proof}
+Let $\Gamma = \{\neg \neg (\varphi \rightarrow \psi), \neg \neg \varphi, \neg \psi\}$. Suffices to show $\Gamma \vdash \bot$.
 
+\begin{align*}
+    \Gamma, \varphi \rightarrow \psi, \varphi &&\vdash&& \psi &&&& (\rightarrow E) \\
+    \Gamma, \varphi \rightarrow \psi, \varphi &&\vdash&& \bot &&&& (\rightarrow E) \\
+    \Gamma, \varphi \rightarrow \psi &&\vdash&& \neg \varphi &&&& (\rightarrow I) \\
+    \Gamma, \varphi \rightarrow \psi &&\vdash&& \bot &&&& (\rightarrow E) \\
+    \Gamma &&\vdash&& \neg (\varphi \rightarrow \psi) &&&& (\rightarrow I) \\
+    \Gamma &&\vdash&& \bot &&&& (\rightarrow E) \\
+\end{align*}
 \end{proof}
 
-\subsection*{2.23 (ii)} 
-$\neg \neg(\varphi \wedge \psi) \rightarrow (\neg \neg \varphi \rightarrow \neg \neg \psi)$ is VALID
+\subsection*{2.23 (ii)}
+$\neg \neg(\varphi \wedge \psi) \rightarrow (\neg \neg \varphi \wedge \neg \neg \psi)$ is VALID
 
 \begin{proof}
+\begin{align*}
+    \neg \neg (\varphi \wedge \psi), \neg \varphi, \varphi \wedge \psi &&\vdash&& \varphi &&&& (\wedge E) \\
+    \neg \neg (\varphi \wedge \psi), \neg \varphi, \varphi \wedge \psi &&\vdash&& \bot &&&& (\rightarrow E) \\
+    \neg \neg (\varphi \wedge \psi), \neg \varphi &&\vdash&& \neg (\varphi \wedge \psi) &&&& (\rightarrow I) \\
+    \neg \neg (\varphi \wedge \psi), \neg \varphi  &&\vdash&& \bot &&&& (\rightarrow E) \\
+    \neg \neg (\varphi \wedge \psi) &&\vdash&& \neg \neg \varphi &&&& (\rightarrow I) \\
+\end{align*}
 
+Similarly,
+\begin{align*}
+    \neg \neg (\varphi \wedge \psi), \neg \psi, \varphi \wedge \psi &&\vdash&& \psi &&&& (\wedge E) \\
+    \neg \neg (\varphi \wedge \psi), \neg \psi, \varphi \wedge \psi &&\vdash&& \bot &&&& (\rightarrow E) \\
+    \neg \neg (\varphi \wedge \psi), \neg \psi &&\vdash&& \neg (\varphi \wedge \psi) &&&& (\rightarrow I) \\
+    \neg \neg (\varphi \wedge \psi), \neg \psi  &&\vdash&& \bot &&&& (\rightarrow E) \\
+    \neg \neg (\varphi \wedge \psi) &&\vdash&& \neg \neg \psi &&&& (\rightarrow I) \\
+\end{align*}
+
+Hence, $\neg \neg (\varphi \wedge \psi) \vdash \neg \neg \varphi \wedge \neg \neg \psi \implies \neg \neg (\varphi \wedge \psi) \rightarrow (\neg \neg \varphi \wedge \neg \neg \psi)$
 \end{proof}
 
 \subsection*{2.23 (iii)} 
-$\neg \neg(\varphi \vee \psi) \rightarrow (\neg \neg \varphi \rightarrow \neg \neg \psi)$ is NOT VALID
+$\neg \neg(\varphi \vee \psi) \rightarrow (\neg \neg \varphi \vee \neg \neg \psi)$ is NOT VALID
 
 \begin{proof}
 Take $\varphi = (-\infty,0)$ and $\psi = (0,\infty)$. Then we get:
@@ -526,8 +552,8 @@ Take $\varphi = (-\infty,0)$ and $\psi = (0,\infty)$. Then we get:
     v(\neg \neg (\varphi \vee \psi)) &&=&& \mathbb{R} \\
     v(\neg \neg \varphi) &&=&& (-\infty, 0) \\
     v(\neg \neg \psi) &&=&& (0, \infty) \\
-    v(\neg \neg \varphi \rightarrow \neg \neg \psi) &&=&& (0, \infty) \\
-    v(\neg \neg(\varphi \vee \psi) \rightarrow (\neg \neg \varphi \rightarrow \neg \neg \psi)) &&=&& (0, \infty) \\
+    v(\neg \neg \varphi \vee \neg \neg \psi) &&=&& \mathbb{R} \setminus \{0\} \\
+    v(\neg \neg(\varphi \vee \psi) \rightarrow (\neg \neg \varphi \vee \neg \neg \psi)) &&=&& \mathbb{R} \setminus \{0\} \\
 \end{align*}
 \end{proof}
 
@@ -557,33 +583,53 @@ Hence, $\Gamma \vdash \bot$.
 \end{proof}
 
 \subsection*{2.23 (v)} 
-$(\neg \neg \varphi \wedge \neg \neg \psi) \rightarrow \neg \neg (\varphi \rightarrow \psi)$ is VALID
+$(\neg \neg \varphi \wedge \neg \neg \psi) \rightarrow \neg \neg (\varphi \wedge \psi)$ is VALID
 
 \begin{proof}
-Let $\Gamma = \{\neg \neg \varphi \wedge \neg \neg \psi, \neg(\varphi \rightarrow \psi\}$. Suffices to show $\Gamma \vdash \bot$
+Let $\Gamma = \{\neg \neg \varphi \wedge \neg \neg \psi, \neg(\varphi \rightarrow \psi)\}$. Suffices to show $\Gamma \vdash \bot$.
 
 \begin{align*}
-    \Gamma &&\vdash&& \neg \neg \psi &&&& (\wedge E) \\
-    \Gamma, \varphi, \psi &&\vdash&& \psi &&&& (Ax) \\
-    \Gamma, \psi &&\vdash&& \varphi \rightarrow \psi &&&& (\rightarrow I) \\
-    \Gamma, \psi &&\vdash&& \bot &&&& (\rightarrow E) \\
-    \Gamma &&\vdash&& \neg \psi &&&& (\rightarrow E) \\
+    \Gamma, \varphi &&\vdash&& \varphi \wedge \psi &&&& (\wedge I) \\
+    \Gamma, \varphi &&\vdash&& \bot &&&& (\rightarrow E) \\
+    \Gamma &&\vdash&& \neg \varphi &&&& (\rightarrow I) \\
+    \Gamma &&\vdash&& \neg \neg \varphi &&&& (Ax) \\
+    \Gamma &&\vdash&& \bot &&&& (\rightarrow E) \\
 \end{align*}
-
-Hence, $\Gamma \vdash \bot$.
 \end{proof}
 
 \subsection*{2.23 (vi)} 
-$(\neg \neg \varphi \vee \neg \neg \psi) \rightarrow \neg \neg (\varphi \rightarrow \psi)$ is VALID
+$(\neg \neg \varphi \vee \neg \neg \psi) \rightarrow \neg \neg (\varphi \vee \psi)$ is VALID
 
 \begin{proof}
 Let $\Gamma = \{\neg \neg \varphi \vee \neg \neg \psi, \neg(\varphi \rightarrow \psi)\}$. Suffices to show $\Gamma \vdash \bot$.
+
+For that, we show the following two derivations:
+$$\Gamma, \neg \neg \varphi \vdash \bot$$
+$$\Gamma, \neg \neg \psi \vdash \bot$$
+
+Then by $(\vee E)$, it follows that, $\Gamma \vdash \bot$.
+
+\begin{align*}
+    \Gamma, \neg \neg \varphi, \varphi &&\vdash&& \varphi \vee \psi &&&& (\vee I) \\
+    \Gamma, \neg \neg \varphi, \varphi &&\vdash&& \bot &&&& (\rightarrow E) \\
+    \Gamma, \neg \neg \varphi &&\vdash&& \neg \varphi &&&& (\rightarrow I) \\
+    \Gamma, \neg \neg \varphi &&\vdash&& \neg \neg \varphi &&&& (Ax) \\
+    \Gamma, \neg \neg \varphi &&\vdash&& \bot &&&& (\rightarrow E) \\
+\end{align*}
+
+\begin{align*}
+    \Gamma, \neg \neg \psi, \psi &&\vdash&& \varphi \vee \psi &&&& (\vee I) \\
+    \Gamma, \neg \neg \psi, \psi &&\vdash&& \bot &&&& (\rightarrow E) \\
+    \Gamma, \neg \neg \psi &&\vdash&& \neg \psi &&&& (\rightarrow I) \\
+    \Gamma, \neg \neg \psi &&\vdash&& \neg \neg \psi &&&& (Ax) \\
+    \Gamma, \neg \neg \psi &&\vdash&& \bot &&&& (\rightarrow E) \\
+\end{align*}
 
 \end{proof}
 
 
 \subsection*{2.32}
-A state $c$ in a Kripke model $C$ determines $p$ iff either $c \Vdash p$ or $c \Vdash \neg p$. Define a binary valuation $v_c$ by $v_c(p) = 1$ iff $c \Vdash p$. Show that if $c$ determines all propositional variables in $\varphi$ then $v_c(\varphi) = 1$ implies $c \Vdash p$. Conclude that a formula is a classical tautology if and only if it is forced in all one-element models. \\
+A state $c$ in a Kripke model $C$ determines $p$ iff either $c \Vdash p$ or $c \Vdash \neg p$. Define a binary valuation $v_c$ by $v_c(p) = 1$ iff $c \Vdash p$. Show that if $c$ determines all propositional variables in $\varphi$ then $v_c(\varphi) = 1$ implies $c \Vdash \varphi$. Conclude that a formula is a classical tautology if and only if it is forced in all one-element models. \\
 
 \begin{proof}
 We proceed by induction on structure of $\varphi$:
