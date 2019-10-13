@@ -681,7 +681,8 @@ But now, we can replace, each variable $x_\sigma$ by a fresh variable $x$ and co
 
 Conversely, suppose strong normalization holds for $(\lambda_{\rightarrow})$ a la Church. For the sake of contradiction assume it doesn't hold for $(\lambda_{\rightarrow})$ a la Curry. That implies there is a term $M$ such that it admits an infinite reduction sequence:
 $$M \rightarrow_\beta M_1 \rightarrow_\beta M_2 \rightarrow_\beta \cdots \rightarrow_\beta M_n \rightarrow_\beta \cdots$$
-But now, we can replace, each variable $x$ by a type-annotated variable $x_\sigma$ where $\sigma$ is the type of the variable $x$ for each term. and consider the above sequence in Church-typed lambda calculus, which gives us a contradiction.
+
+Fix a type for the term $M$. Then each $M_n$ inhabits the same type. But now, we can replace, each variable $x$ by a type-annotated variable $x_\sigma$ where $\sigma$ is the type of the variable $x$. and we get an infinite sequence in Church-typed lambda calculus, which gives us a contradiction.
 \end{proof}
 
 \vspace{1in} %Leave more space for comments!
