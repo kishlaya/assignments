@@ -136,7 +136,7 @@ By induction on the derivation of $P \rightarrow_{\beta} P'$.
 \end{itemize}
 \end{proof}
 
-\textbf{Lemma 4}: For all $P,Q,Q' \in \Lambda$ if $Q \rightarrow_{\beta} Q'$ then also $P[x:=Q] \twoheadrightarrow_{\beta} P[x:=Q']$
+\textbf{Lemma 4}: For all $P,Q,Q' \in \Lambda$ if $Q \rightarrow_{\beta} Q'$ then $P[x:=Q] \twoheadrightarrow_{\beta} P[x:=Q']$
 \begin{proof}
 By induction on structure of $P$.
 
@@ -226,7 +226,7 @@ According to the definition, $\widetilde{v}(\bot) = 0$, where $\widetilde{v}$ is
 
 
 \subsection*{2.6}
-Let $(A, \vee, \wedge)$ be an algebra with two binary operations (written in infix notation). Assume that the equations (i)-(iv) of Lemma 2.3.4 hold for all elements of A. Define $a < b$ by $a \vee b = b$. Prove that $(A, \leq)$ is a lattice, where suprema and infima are given by $\vee$ and $\wedge$. \\ 
+Let $(A, \vee, \wedge)$ be an algebra with two binary operations (written in infix notation). Assume that the equations (i)-(iv) of Lemma 2.3.4 hold for all elements of A. Define $a \leq b$ by $a \vee b = b$. Prove that $(A, \leq)$ is a lattice, where suprema and infima are given by $\vee$ and $\wedge$. \\ 
 
 \begin{proof}
 Lemma 2.3.4 says that the following are valid:
@@ -304,9 +304,9 @@ Now, we state and prove another result regarding prime filters.
 
 \textbf{Proposition}: Let $G$ be a prime filter of a boolean algebra. Then $\alpha \in G$ iff $-\alpha \not \in G$
 
-\begin{proof}: Let $\alpha \in G$. Then since $\alpha \cap -\alpha = 0$ and $0 \not \in G$ (as $G$ is proper), we get that $-\alpha \not \in G$.
+\begin{proof}: Let $\alpha \in G$. Then since $\alpha \wedge -\alpha = 0$ and $0 \not \in G$ (as $G$ is proper), we get that $-\alpha \not \in G$.
 
-Now suppose, $-\alpha \not \in G$. Since $-\alpha \cup \alpha = 1$ and $1 \in G$, by the property of prime filters we get that $\alpha \in G$.
+Now suppose, $-\alpha \not \in G$. Since $-\alpha \vee \alpha = 1$ and $1 \in G$, by the property of prime filters we get that $\alpha \in G$.
 \end{proof}
 
 Now we note that, since $v \not \models \varphi \implies v(\varphi) \neq 1 \implies -v(\varphi) \neq 0$ as $\mathcal{B}$ is a Boolean algebra so $v(\varphi) \vee -v(\varphi) = 1$
@@ -384,7 +384,7 @@ Let $\Gamma = \{(((p \rightarrow q) \rightarrow p) \rightarrow p) \rightarrow q,
     \Gamma, p &&\vdash&& p && &&(Ax)\\
     \Gamma, p &&\vdash&& ((p \rightarrow q) \rightarrow p) \rightarrow p && &&(\rightarrow I)\\
     \Gamma, p &&\vdash&& (((p \rightarrow q) \rightarrow p) \rightarrow p) \rightarrow q) && &&(Ax)\\
-    \Gamma p &&\vdash&& q && &&(\rightarrow E) \\
+    \Gamma, p &&\vdash&& q && &&(\rightarrow E) \\
     \Gamma &&\vdash&& p \rightarrow q && &&(\rightarrow I) \\
     \Gamma &&\vdash&& p && &&(\rightarrow E) \\
     (((p \rightarrow q) \rightarrow p) \rightarrow p) \rightarrow q &&\vdash&& ((p \rightarrow q) \rightarrow p) \rightarrow p && &&(\rightarrow I) \\
@@ -672,7 +672,7 @@ This only guarantees that the type of $M$ is an instance of $\tau$.
 \end{proof}
 
 \subsection*{3.15}
-Show that strong normalization for $(\lambda_\rightarrow)$ a la Curry implies strong normalization for $(\lambda_\rightarrow)$ a la Church, and conversely. 
+Show that strong normalization for $(\lambda_\rightarrow)$ a la Curry implies strong normalization for $(\lambda_\rightarrow)$ a la Church, and conversely. \\
 
 \begin{proof}
 Suppose strong normalization holds for $(\lambda_{\rightarrow})$ a la Curry. For the sake of contradiction assume it doesn't hold for $(\lambda_{\rightarrow})$ a la Church. That implies there is a term $M$ such that it admits an infinite reduction sequence:
