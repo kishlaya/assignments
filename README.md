@@ -9,3 +9,11 @@ I have decided to LaTeX all my assignments from now onwards, and I shall upload 
 - Coding Theory
 - Mathematical Logic
 - Proofs and Types
+
+## Semester 2 (Spring 2020)
+
+- Topics in Algorithms
+- Stochastic Processes 2
+- Computational Complexity
+- Spectral Graph Theory
+- Graph Theory (audit)
