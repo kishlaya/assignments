@@ -1,0 +1,75 @@
+\documentclass[12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{latexsym,amsfonts,amssymb,amsthm,amsmath}
+\usepackage {tikz}
+\usetikzlibrary {positioning}
+
+\setlength{\parindent}{0in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.8in}
+\setlength{\topmargin}{0in}
+\setlength{\headheight}{18pt}
+
+\definecolor {processblue}{cmyk}{0.96,0,0,0}
+
+\title{Graph Theory - Homework 3}
+\author{Kishlaya Jaiswal}
+
+\begin{document}
+
+\maketitle
+
+\vspace{0.5in}
+
+
+\subsection*{Exercise 1}
+\begin{proof}.
+
+\textbf{(a)} Since, $|T-e+e'| = |T| = |V|-1$, it suffices to show that the induced subgraph on $T-e+e'$ is connected for some $e' \in T'-T$. If $e=(x,y)$, then it suffices to show that there is a path between $x \rightsquigarrow y$ in $T-e+e'$. 
+
+Consider $T \setminus \{e\}$. It has two connected components $X, Y$ such that $X \sqcup Y = V(T)$ and $x \in X, y \in Y$. Now since $X \sqcup Y = V(T')$, there are vertices $x' \in X, y' \in Y$ such that $e' = (x',y') \in T' - T$. Thus, $x \rightsquigarrow x' \xrightarrow{e'} y' \rightsquigarrow y$ is a path between $x,y$ in $T-e+e'$.
+\newline 
+
+\textbf{(b)} Since, $|T'+e-e'| = |T'| = |V|-1$, it suffices to show that the induced subgraph on $T'+e-e'$ has no cycles for some $e' \in T'-T$.
+
+Consider $T'+e$. It contains a cycle $C$ passing through the edge $e=(x,y)$. Let $e' \in T'-T$ be any other edge on this cycle $C$. We claim that $T'+e-e'$ has no cycles. For the sake of contradiction, suppose it has a cycle $C'$. If $e \not \in C'$ then $C' \subseteq T'$ which is a contradiction to $T'$ being a tree. Otherwise if $e \in C'$, then consider the path $C' \setminus \{e\}$ between $x,y$ in $T'$. But then $C \setminus \{e\}$ is also a path between $x,y$ in $T'$, which is clearly different from $C' \setminus \{e\}$ as $e' \in C$ but $e' \not \in C'$. But a tree has a unique path between any two vertices.
+\end{proof}
+
+\subsection*{Exercise 2}
+\begin{proof}
+We use Kirchoff's theorem which says that number of spanning trees of a connected graph $G$ is given by:
+$$t(G) = \frac{1}{n}\lambda_1 \lambda_2 \ldots \lambda_{n-1}$$
+where $\lambda_i$ are the non-zero eigenvalues of laplacian $L(G)$.
+
+We have $G = K_{m,n}$, $L(G) = D(G) - A(G)$
+$$L(G) = \begin{pmatrix}
+nI & -J \\
+-J & mI \\
+\end{pmatrix}$$
+
+Let $v = (v_1 \ldots v_m, u_1 \ldots u_n)^T$, then $L(G)v = \lambda v$ gives us following two equations:
+$$(n-\lambda)v_i = \sum u_j$$
+$$(m-\lambda)u_j = \sum v_i$$.
+
+\textbf{Case 1:} $\lambda = n$. $u_1 = u_2 = \ldots u_n = 0$ and $\sum v_i = 0$. Hence $v = (v_1 \ldots v_m, 0 \ldots 0)^T$ is an eigenvector with eigenvalue $n$. This gives us that $\lambda = n$ has an eigenspace of dimension $m-1$.
+
+\textbf{Case 2:} $\lambda = m$. $v_1 = v_2 = \ldots v_m = 0$ and $\sum v_j = 0$. Hence $v = (0 \ldots 0, u_1 \ldots u_n)^T$ is an eigenvector with eigenvalue $m$. This gives us that $\lambda = m$ has an eigenspace of dimension $n-1$.
+
+\textbf{Case 3:} $\lambda \neq m,n$ Then we have $v_1 = v_2 = \ldots = v_m$ and $u_1 = u_2 = \ldots = u_n$. Thus $$u_1 = \frac{mv_1}{m-\lambda}; v_1 = \frac{nu_1}{n-\lambda} = \left(\frac{n}{n-\lambda}\right)\left(\frac{mv_1}{m-\lambda}\right)$$
+If $v_1 = 0 \implies v_i = u_j = 0$. Hence $$\left(\frac{n}{n-\lambda}\right)\left(\frac{m}{m-\lambda}\right) = 1 \implies \lambda = 0, m+n$$
+
+(Observation: Case 3 was unnecessary as we know $\sum \lambda = 2mn$ and from the first two cases we already have that $n(m-1) + m(n-1) = 2mn - (m+n)$, so the last eigenvalue has to be $m+n$)
+
+Finally, $$t(G) = \frac{1}{m+n}n^{m-1}m^{n-1}(m+n) = n^{m-1}m^{n-1}$$
+\end{proof}
+
+
+
+\vspace{2in} %Leave more space for comments!
+
+
+
+\end{document}
+
