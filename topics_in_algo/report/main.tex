@@ -1,0 +1,257 @@
+
+\documentclass[a4paper,UKenglish,cleveref, autoref]{lipics-v2019}
+%This is a template for producing LIPIcs articles.
+%See lipics-manual.pdf for further information.
+%for A4 paper format use option "a4paper", for US-letter use option "letterpaper"
+%for british hyphenation rules use option "UKenglish", for american hyphenation rules use option "USenglish"
+%for section-numbered lemmas etc., use "numberwithinsect"
+%for enabling cleveref support, use "cleveref"
+%for enabling cleveref support, use "autoref"
+
+
+%\graphicspath{{./graphics/}}%helpful if your graphic files are in another directory
+
+\bibliographystyle{plainurl}% the mandatory bibstyle
+
+\title{Integrality of stable matchings polytope} %TODO Please add
+
+% \titlerunning{Dummy short title}%optional, please use if title is longer than one line
+
+\author{Kishlaya Jaiswal}{Chennai Mathematical Institute }{kishlaya@cmi.ac.in}{}{}%TODO mandatory, please use full name; only 1 author per \author macro; first two parameters are mandatory, other parameters can be empty. Please provide at least the name of the affiliation and the country. The full address is optional
+
+\authorrunning{K. Jaiswal}%TODO mandatory. First: Use abbreviated first/middle names. Second (only in severe cases): Use first author plus 'et al.'
+
+\Copyright{Kishlaya Jaiswal}%TODO mandatory, please use full first names. LIPIcs license is "CC-BY";  http://creativecommons.org/licenses/by/3.0/
+
+%\ccsdesc[100]{General and reference~General literature}
+%\ccsdesc[100]{General and reference}%TODO mandatory: Please choose ACM 2012 classifications from https://dl.acm.org/ccs/ccs_flat.cfm
+
+%\keywords{Dummy keyword}%TODO mandatory; please add comma-separated list of keywords
+
+%\category{}%optional, e.g. invited paper
+
+%\relatedversion{}%optional, e.g. full version hosted on arXiv, HAL, or other respository/website
+%\relatedversion{A full version of the paper is available at \url{...}.}
+
+%\supplement{}%optional, e.g. related research data, source code, ... hosted on a repository like zenodo, figshare, GitHub, ...
+
+%\funding{(Optional) general funding statement \dots}%optional, to capture a funding statement, which applies to all authors. Please enter author specific funding statements as fifth argument of the \author macro.
+
+%\acknowledgements{I want to thank \dots}%optional
+
+\nolinenumbers %uncomment to disable line numbering
+
+\hideLIPIcs  %uncomment to remove references to LIPIcs series (logo, DOI, ...), e.g. when preparing a pre-final version to be uploaded to arXiv or another public repository
+
+%Editor-only macros:: begin (do not touch as author)%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\EventEditors{John Q. Open and Joan R. Access}
+\EventNoEds{2}
+\EventLongTitle{42nd Conference on Very Important Topics (CVIT 2016)}
+\EventShortTitle{CVIT 2016}
+\EventAcronym{CVIT}
+\EventYear{2016}
+\EventDate{December 24--27, 2016}
+\EventLocation{Little Whinging, United Kingdom}
+\EventLogo{}
+\SeriesVolume{42}
+\ArticleNo{23}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\theoremstyle{definition}
+\newtheorem*{lemma*}{Lemma}
+\newtheorem*{definition*}{Definition}
+\newtheorem*{theorem*}{Theorem}
+\begin{document}
+
+\maketitle
+
+%TODO mandatory: add short abstract of the document
+\begin{abstract}
+Given a complete bipartite graph with edge preferences, we know that Gale-Shapley algorithm confirms the existence of (and outputs) a stable matching. Further, we know that perfect matching polytope is integral. We want to add additional constraints corresponding to stability and see if these new constraints still keeps the polytope integral.
+
+U. Rothblum showed that integrality of polytope remains intact even if the preference lists of men and women are incomplete, in his 1992 paper - \textsl{Characterization of stable matchings as extreme points of a polytope}, which I shall present now.
+\end{abstract}
+
+\section{Modelling Perfect Matchings}
+\label{sec:typesetting-summary}
+
+Consider the problem of determining a perfect matching for complete bipartite graph $(U,V)$ (with $|U|=|V|$). We know that it can be modeled using a system of linear inequalities as follows:
+
+\begin{align}
+    \sum_{j \in V} x_{ij} &= 1 & \forall i \in U \\
+    \sum_{i \in U} x_{ij} &= 1 & \forall j \in V \\
+    x_{ij} &\geq 0 & \forall (i,j) \in U \times V
+\end{align}
+
+We have variables $\{x_{ij}\}$ for each edge $(i,j) \in U \times V$, such that $x_{ij} = 1$ iff $(i,j)$ edge is in the matching, otherwise $x_{ij}=0$.
+
+\begin{remark*}
+In convex optimization problems, when the underlying polytope is integral, linear programming can be used to solve integer programming problems for the given system of inequalities, a problem that can otherwise be more difficult.
+\end{remark*}
+
+So the first question arises is if this polytope $P$ is integral, after the relaxation of variables $0 \leq x_{ij} \leq 1$?
+
+Here is an interesting observation: the matrix $(x_{ij})_{U \times V}$ is a doubly stochastic matrix iff $\{x_{ij}\}$ is a feasible point for the polytope $P$. And furthermore, each perfect matching corresponds to a permutation matrix.
+
+\textsl{Birkhoff-von Neumann} theorem states that polytope $P$ is the convex hull of $U \times V$ permutation matrices and furthermore that the vertices of the polytope $P$ are precisely the permutation matrices. Therefore, the perfect matchings are the extreme (integer) points of this polytope.
+
+% \section{Stable Perfect Matching}
+
+% Returning back to our stable perfect matching problem, we first ask: can the stability constraint be modeled as a linear inequality? And if so, then does the resulting polytope still has the integrality of extreme points?
+
+% Rothblum addressed this problem in a more general setting, that is when lists are incomplete, strict and singlehood is permitted (some vertices can remain unmatched). This is what we shall discuss now.
+
+\section{Stable Matching with Incomplete Lists}
+
+We begin with sets of men $M$ and women $W$ (not necessarily equal in size). Each man $m$ has preference list $W_m \subseteq W$ along with a strict preference order $>_m$ on it, such that $w_1 >_m w_2$ (where $w_1, w_2 \in W_m$) means $m$ prefers $w_1$ over $w_2$. Similarly we have $(M_w, >_w)$ as the preference list for each woman $w$.
+% We will assume that the lists are consistent that is $w \in W_m \iff m \in M_w$.
+
+Now since the lists are incomplete, some people might remain unmatched as well. we need to re-setup linear inequalities to denote a matching between men and women:
+
+% =============================================
+%  Make the following equations align properly
+% =============================================
+
+\begin{align}
+    \sum_{j \in W} x_{ij} \leq 1 && \forall i \in M \\
+    \sum_{i \in M} x_{ij} \leq 1 && \forall j \in W \\
+    x_{ij} \geq 0 && \forall (i,j) \in M \times W
+\end{align}
+
+We additionally also want that if a woman doesn't appears in some man's list then that edge variable should be zero, that is, let $A = \{(m,w) \mid m \in M_w \text{ and } w \in W_m\}$ be the set of possible pairs, then
+
+\begin{align}
+    x_{ij} = 0 && \forall (i,j) \not \in A
+\end{align}
+
+Now we need the final constraint for stability. For that we redefine blocking pair. Given a matching $N$, $(m,w) \in A$ blocks $N$ if any of the following holds:
+\begin{itemize}
+    \item $m$ and $w$ both have a partner in $N$ but $w >_m N(m)$ and $m >_w N(w)$
+    \item Only $m$ has a partner in $N$ but $w >_m N(m)$
+    \item Only $w$ has a partner in $N$ but $m >_w N(w)$
+    \item Both $m$ and $w$ don't have partners in $N$
+\end{itemize}
+
+Hence the stability constraint should be:
+
+\begin{align}
+    \sum_{j >_m w} x_{mj} + \sum_{m >_ w i} x_{iw} + x_{mw} \geq 1 && \forall (m,w) \in A
+\end{align}
+
+Indeed if $\sum_{j >_m w} x_{mj} + \sum_{m >_ w i} x_{iw} + x_{mw} < 1 \implies \sum_{j >_m w} x_{mj} = \sum_{m >_ w i} x_{iw} = x_{mw} = 0$ which means that either $m$ has no partner or if he does then $w >_m x(m)$ and similarly either $w$ has no partner or if she does then $m >_w x(w)$.
+
+\begin{remark*}
+The same stability constraint works in the case of equal sizes of both sets of men and women and complete lists also.
+\end{remark*}
+
+We also note that if $\sum_{j >_m w} x_{mj} + \sum_{m >_ w i} x_{iw} + x_{mw} = 1$ then either $m$ and $w$ are matched together or one of them has a strictly better and other has strictly worse partner.
+
+The only other possibility is $\sum_{j >_m w} x_{mj} + \sum_{m >_ w i} x_{iw} + x_{mw} = 2$ which says that both $m$ and $w$ have strictly better partners.
+\newline
+
+Finally, we relax our variables to $0 \leq x_{ij} \leq 1$ and discuss the integrality of the polytope $(4)-(8)$: \textsl{the stable matching polytope}.
+
+% \newpage
+
+We begin by showing that every integer point is an extreme point. Before we proceed I'd like to add a remark here that the author directly concludes this as a consequence of Birkhoff theorem. In my opinion, the result is not so straight-forward as feasible points may not be doubly stochastic. So we shall state (and prove) here a generalization of the Birkhoff theorem from which the result shall follow.
+
+\begin{definition*}
+A matrix $Q$ is said to be doubly substochastic if its entries are nonnegative and all its row and column sums are at most one.
+\end{definition*}
+\begin{definition*}
+A matrix P is said to be a partial permutation matrix if it has at most one nonzero entry in each row and column, and these nonzero entries (if any) are all $1$.
+\end{definition*}
+\begin{theorem*}
+Every doubly substochastic matrix is a finite convex combination of partial permutation matrices. Conversely, a finite convex combination of partial permutation matrices is evidently double substochastic.
+\end{theorem*}
+\begin{proof}
+Let $Q$ be a doubly substochastic matrix. Consider the matrix $Q' = \begin{bmatrix} Q & I-D_r\\I-D_c & Q^T\end{bmatrix}$, where $D_r$ and $D_c$ are diagonal matrices with the row and column sums of $Q$ respectively. Notice that $Q'$ is now a doubly stochastic matrix and hence we can now apply Birkhoff theorem to complete the proof.
+\end{proof}
+
+Here is a simple observation: Let $P$ be a polytope such that all it's integer points are extreme points, then for any subpolytope $Q \subseteq P$ all it's integer points are extreme points.
+
+We mention this because the equations $(4)-(6)$ form a simple polytope where each feasible point can be identified with a substochastic matrix and integral feasible point with a partial permutation matrix, and vice-versa. Hence we can apply our above theorem and observation to conclude that any integer point is an extreme point for the stable matching polytope.
+\newline 
+
+Conversely, let $\{x_{ij}\}$ be an extreme point. We want to argue that if it is not integral then it can be written as a convex combination of two other feasible points. For that, we consider two extreme matchings which can be extracted out of any feasible solution. Denote by $S_M(x) = \{m \in M \mid \sum_{j \in W} x_{mj} > 0\}$ (men who weren't left unmatched). For $m \in S_M(x)$ let $W^*(x,m)$ and $W_*(x,m)$ be the most preferred woman and the least preferred woman of $m$ in the list $\{w \mid x_{mw} > 0\}$, respectively. Similarly we can define $S_W(x) = \{w \in W \mid \sum_{i \in M} x_{iw} > 0\}$ and maps $M^*(x,w)$ and $M_*(x,w)$ for all $w \in S_W(x)$.
+
+What we shall do is for every man $m \in S_M(x)$ increment the edge variable $(m, W^*(x,m))$ by $\epsilon$ and decrement $(m, W_*(x,m))$ by $\epsilon$. This shall give us another feasible solution. Similarly, if we exchange the increment/decrement in above process, then we get another feasible solution. And then $x$ is the middle point of these two feasible solutions. To make this idea precise, we define our extreme matchings $x^*$ and $x_*$ as follows:
+
+$$
+(x^*)_{mw} =
+     \begin{cases}
+       1 &\quad m \in S_M(x) \text{ and } w=W^*(x,m) \\
+       0 &\quad \text{otherwise.} \\
+     \end{cases}
+$$
+
+$$
+(x_*)_{mw} =
+     \begin{cases}
+       1 &\quad m \in S_M(x) \text{ and } w=W_*(x,m) \\
+       0 &\quad \text{otherwise.} \\
+     \end{cases}
+$$
+
+Observe that $x$ is a matching (integer point) iff $x^*=x_*$ that is both the most preferred and least preferred partner are same. So we consider $z = x^* - x_*$. To proceed, we state a few properties about $z$, corresponding to our original constraints:
+
+\begin{itemize}
+    \item $\sum_{j \in W} z_{ij} = 0, i \in M$ (row sums are zero)
+    \item $\sum_{i \in M} z_{ij} = 0, j \in W$ (column sums are zero)
+    \item $x_{ij} = 0 \implies z_{ij} = 0, (i,j) \in M \times W$
+    \item $z_{ij} = 0, (i,j) \not \in A$
+    \item $\left(\sum_{j >_m w} x_{mj} + \sum_{m >_ w i} x_{iw} + x_{mw} = 1 \right) \implies \left(\sum_{j >_m w} z_{mj} + \sum_{m >_ w i} z_{iw} + z_{mw} = 0\right)$
+\end{itemize}
+
+Assuming these properties, we can choose a small enough $\epsilon > 0$, such that both $x + \epsilon z$ and $x - \epsilon z$ are feasible solutions. Then we re-write $x = \frac{1}{2}(x + \epsilon z) + \frac{1}{2}(x - \epsilon z)$. Since $x$ was an extreme point, we conclude that $z=0$ and hence the integrality of $x$ follows.
+
+To prove above-mentioned properties we shall build some results (which shall be of independent interest) using our intuition from stable marriage with complete lists problem. An essential result we had was men-optimal matching is women-pessimal and vice-versa. Rothblum establishes a similar result here.
+
+\begin{lemma*}
+For $(m,w) \in A$,
+\begin{itemize}
+    \item $\Big( \big(m \not \in S_M(x)\big)$ or $\big(m \in S_M(x)$ and $w \geq_m W^*(x,m)\big) \Big)$ $\implies$ $\Big(\sum_{i \in M} x_{iw} = 1$ and $m \leq_w M_*(x,w)\Big)$ (Converse is also true provided $\sum_{j >_m w} x_{mj} + \sum_{m >_ w i} x_{iw} + x_{mw} = 1$)
+    \item $\big( m \in S_M(x)$ and  $w = W^*(x,m) \big) \iff \big( \sum_{i \in M} x_{iw} = 1$ and $m = M_*(x,w) \big)$
+    \item $m \in S_M(x) \iff \sum_{j \in W} x_{mj} = 1$
+\end{itemize}
+\end{lemma*}
+
+The first two points dictate what we said about optimality vs pessimality, whose proofs follow from a simple manipulation of inequalities. But I, particularly, find the last point of more interest as it tells that the row sums are always either $0$ or $1$, which was apriori not at all expected. The proof technique used for this point is equally interesting and moreover helps in establishing the validity of the matchings $x^*$ and $x_*$.
+
+It is clear that that if $\sum_{j \in W} x_{mj} = 1$ then $m \in S_M(x)$. For the converse, Let us consider the set $F_W(x) = \{w \mid \sum_{i \in M} x_{iw}=1\}$ and the map $W^*(x,.) : S_M(x) \rightarrow F_W(x)$ (definition is valid because of the second point in the lemma). Moreover, injectivity also follows from the second point because if $w=W^*(x,m_1)=W^*(x,m_2)$ then $m_1 = M_*(x,w) = m_2$. Now consider the following inequality:
+
+$$|F_W(x)| = \sum_{j \in F_W(x)} \sum_{i \in M} x_{ij} = \sum_{i \in S_M(x)} \sum_{j \in F_W(x)} x_{ij} \leq \sum_{i \in S_M(x)} 1 = |S_M(x)|$$
+
+Implying that it is surjective also and hence equality is achieved in the above equation, which tells us that for $i \in S_M(x)$ $\sum_{j \in F_W(x)} x_{ij} = 1$, completing the proof.
+
+Similarly, with the roles reversed, we have the analogous lemma:
+\begin{lemma*}
+For $(m,w) \in A$,
+\begin{itemize}
+    \item $\Big( \big[w \not \in S_W(x)\big]$ or $\big[w \in S_W(x)$ and $m \geq_w M^*(x,w)\big] \Big)$ $\implies$ $\Big(\sum_{j \in W} x_{mj} = 1$ and $w \leq_m W_*(x,m)\Big)$ (Converse is also true provided $\sum_{j >_m w} x_{mj} + \sum_{m >_ w i} x_{iw} + x_{mw} = 1$)
+    \item $\big[ w \in S_W(x)$ and  $m = M^*(x,w) \big] \iff \big[ \sum_{j \in W} x_{mj} = 1$ and $w = W_*(x,m) \big]$
+    \item $w \in S_W(x) \iff \sum_{i \in M} x_{iw} = 1$
+\end{itemize}
+\end{lemma*}
+
+I would like to add that since the row and columns sums are always $1$ (or $0$ in case someone remains unmatched), as established by the above lemmas, the exact same proof goes through in the original stable marriage with complete lists instance.
+
+\section{Conclusion}
+
+It is interesting to note that these lemmas indeed add a lot of structure/restrictions on the feasible points. They can be used to give an easy proof for the \textsl{Decomposition property}, which is: if $x$ and $y$ are two stable matchings, and $(m,w)$ is a pair in the matching $x$, then if one of them prefers the matching $x$ over $y$ then their partner prefers the matching $y$ over $x$ - which seems intuitive from our optimality vs pessimality result.
+
+As a last remark, Rothblum adds that in the case of many-to-one matching, for example: students have to be matched to colleges where several students can be matched to a single college, depending upon the number of available seats; our results can be easily extended by cloning each college as many times as available seats in that college, and uniformly ordering them in each student's list.
+
+\section{Further Work}
+
+Following this course, the next immediate question for me to ask would be: What happens if there are ties in the preference lists?
+
+In such a case, the ordering on the preference lists will not be strict one. We have crucially used that strictness in our stability constraint and in the lemmas. So it is interesting to see where would (if) the above lemmas fail?
+
+We have also seen in class that there are different notions of stability in case of ties. So, I would like to study about the following:
+\begin{itemize}
+    \item Can we model super-stability, strong-stability and weak-stability respectively as linear inequalities?
+    \item Will the resulting polytope be integral with those matchings as their extreme points?
+\end{itemize}
+\end{document}
+
