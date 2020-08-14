@@ -1,0 +1,202 @@
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Template for a conference paper, prepared for the
+%% Food and Resource Economics Department - IFAS
+%% UNIVERSITY OF FLORIDA
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Version 1.0 // November 2019
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Ariel Soto-Caro
+%%  - asotocaro@ufl.edu
+%%  - arielsotocaro@gmail.com
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[10pt]{article}
+\usepackage{format}
+
+\usepackage{amsthm}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\usepackage[ruled,vlined]{algorithm2e}
+\newcommand{\bigslant}[2]{{\raisebox{.2em}{$#1$}\left/\raisebox{-.2em}{$#2$}\right.}}
+
+\usepackage{enumitem}
+\setlist[itemize,1]{label=\textbullet}
+\setlist[itemize,2]{label=$\circ$}
+\setlist[itemize,3]{label=$\ast$}
+
+%% ===============================================
+%% Setting the line spacing (3 options: only pick one)
+% \doublespacing
+% \singlespacing
+\onehalfspacing
+%% ===============================================
+
+\setlength{\droptitle}{-5em} %% Don't touch
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SET THE TITLE
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% TITLE:
+\title{Random Trees and Effective Resistance}
+
+% AUTHORS:
+\author{Kishlaya Jaiswal\\% Name author
+    % \href{mailto:kishlaya.j@gmail.com}{\texttt{kishlaya.j@gmail.com}} %% Email author 1 
+% \and Second Author\\% Name author
+%     \href{mailto:secondauthor@ufl.edu}{\texttt{secondauthor@ufl.edu}} %% Email author 2
+% \and Third Author\\% Name author
+%     \href{mailto:thirdauthor@ufl.edu}{\texttt{thirdauthor@ufl.edu}}%% Email author 3
+%\and Forth Author\\% Name author
+%    \href{mailto:forthuthor@ufl.edu}{\texttt{forthuthor@ufl.edu}}%% Email author 4
+    }
+    
+% DATE:
+\date{\today}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ABSTRACT
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\setstretch{.8}
+\maketitle
+% %%%%%%%%%%%%%%%%%%
+\begin{abstract}
+% CONTENT OF ABS HERE--------------------------------------
+
+We look at a graph as an electric network to present a simple proof for the well known relation between effective resistance of an edge and the chances of that edge being in a uniformly random spanning tree.
+
+% END CONTENT ABS------------------------------------------
+\noindent
+\textit{\textbf{Advisor: }%
+Samir Datta} \\ %% <-- Keywords HERE!
+
+\end{abstract}
+}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% BODY OF THE DOCUMENT
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% % --------------------
+\section{Introduction}
+% % --------------------
+
+Let $G=(V,E)$ be a given undirected graph. Sampling a uniformly random spanning tree $T$ is a well-studied problem and the question we ask is: given an edge $e \in E$, what are the chances that a random spanning tree has this edge $e$.
+
+We consider an electric circuit where each edge in $G$ is replaced with a resistor of $1 \Omega$. To setup a potential difference, we supply external current $i_{ext}$ at nodes; then potential $p$ at each node is given by: $i_{ext} = Lp$ where $L$ denotes the Laplacian of the graph.
+
+\textsl{Effective resistance} of an edge $e=(a,b)$, denoted by $R_{\text{eff}}(e)$, is defined as potential difference across $e$ when a unit current is inducted at $a$ and taken out at $b$.
+
+So we consider the particular vector $i_{ext} = x_e$ where $x_e(a) = 1$, $x_e(b) = -1$ and $x_e(c) = 0$ for all $c \neq a,b$. Since $x_e \perp \textbf{1}$, we know that a solution for $p$ exists and can be given by $p = L^{\dag}x_e$ where $L^{\dag}$ denotes the psuedo-inverse of $L$. Therefore, potential difference between $a$ and $b$ is $p(a) - p(b) = x_e^T p = x_e^T L^{\dag} x_e$ and so $R_{\text{eff}}(e) = p(a)-p(b) = x_e^T L^{\dag} x_e$
+
+It turns out that:
+$$\mathbb{P}[e \in T] = R_{\text{eff}}(e)$$
+
+Given these values $\mathbb{P}(e \in T)$, we can use them to sample a random spanning tree as follows~\cite{GUENOCHE1983214}:
+
+% \begin{algorithm}[H]
+% \SetAlgoLined
+% $T = \{\}$, $G_0 = G$ \\
+% Let $e_1, \ldots, e_m$ be some ordering on the edges \\
+% \For{$i\gets1$ \KwTo $m$}{
+%     Let $p$ be the probability that $e_i$ is in a random spanning tree of $G_{i-1}$ \\
+%     Flip a biased coin whose chance of heads is $p$ \\
+%     \eIf{heads}{
+%         $T = T \cup \{e_i\}$ \\
+%         % $G_i = G_{i-1} / \{e_i\}$
+%         $G_i = \bigslant{G_{i-1}}{\{e_i\}}$
+%     }{
+%         $G_i = G_{i-1} \setminus \{e_i\}$
+%     }
+% }
+% Return $T$
+% \caption{Sampling a uniformly random spanning tree}
+% \end{algorithm}
+
+\begin{algorithm}[H]
+\SetAlgoLined
+$T = \{\}$ \\
+\For{$e \in E$}{
+    Let $p$ be the probability that $e$ is in a random spanning tree of $G$ \\
+    Flip a biased coin whose chance of heads is $p$ \\
+    \eIf{heads}{
+        $T = T \cup \{e\}$ \\
+        % $G_i = G_{i-1} / \{e_i\}$
+        $G = \bigslant{G}{\{e\}}$ (contract $e$)
+    }{
+        $G = G \setminus \{e\}$ (delete $e$)
+    }
+}
+Return $T$
+\caption{Sampling a uniformly random spanning tree}
+\end{algorithm}
+
+\medskip
+
+But directly calculating these probabilities require enumerating all spanning trees (hard), whereas computing $R_{\text{eff}}(e)$ only involves multiplying vectors (easy).
+
+The proof we discuss here is from ~\cite{appralgo}. In what follows, we shall assume that the graph is connected (if the graph is not connected then no spanning tree exists).
+
+% % --------------------
+\section{Matrix Tree Theorem}
+% % --------------------
+
+Matrix Tree Theorem~\cite{godsil2001algebraic} counts the number of spanning trees of $G$ in terms of the Laplacian of the graph. That is, let $0 < \lambda_1 \leq \cdots \lambda_n$ be the eigen values of $L$, then 
+$$\# \text{spanning trees of } G = \frac1n \lambda_1 \ldots \lambda_n$$
+
+We define $$\bar{L} = L + \frac1n J$$
+$\bar{L} \textbf{1} = \textbf{1}$ and for any other eigenvector $v$ (of $L$) of non-zero eigenvalue, since $v \perp \textbf{1}$, $v$ is also an eigenvector of $\bar{L}$ with same eigenvalue. Hence $\{1, \lambda_1, \ldots, \lambda_n\}$ are the eigenvalues of $\bar{L}$ and so we can re-state the Matrix Tree Theorem as:
+$$\# \text{spanning trees of } G = \frac1n \det(\bar{L})$$
+
+% % --------------------
+\section{Main Result}
+% % --------------------
+
+\begin{lemma}
+Given a positive-definite symmetric matrix $M \in \mathbb{R}^{n \times n}$ and $x \in \mathbb{R}^n$
+$$\det(M + x x^T) = \det(M) (1 + x^T M^{-1} x)$$
+\end{lemma}
+
+\begin{proof}
+Since $M$ is positive-definite symmetric, there exists a unique positive-definite symmetric matrix $M^{1/2}$ such that $(M^{1/2})^2 = M$
+\begin{align*}
+    \det(M + x x^T) &= \det \left(M^{1/2} (I + M^{-1/2} x x^T M^{-1/2}) M^{1/2} \right) \\
+    &= \det(M) \det(I + M^{-1/2} x x^T M^{-1/2}) \\
+    &= \det(M) \det(I + yy^T) \\
+\end{align*}
+where $y = M^{-1/2} x$. Notice that solutions of $y^Tv = 0$ gives $n-1$ eigenvectors of $I + yy^T$ with eigenvalue $1$ and from trace computation we get the last eigenvalue is $1 + y^Ty$. Hence $\det(I + yy^T) = 1 + y^Ty = 1 + x^T M^{-1} x$ and we are done.
+\end{proof}
+
+Since $G$ is connected, $\bar{L}$ is a positive definite symmetric matrix and $\det(\bar{L}) > 0$. We also note that Laplacian of $G - \{e\}$ is simply $L - x_e x_e^T$. Therefore, $\# \text{spanning trees of } G$ not containing $e = \# \text{spanning trees of } G \setminus \{e\} = \frac1n \det(\bar{L} - x_e x_e^T)$.  Finally we have,
+
+\begin{align*}
+    \mathbb{P}[e \in T] &= 1 - \mathbb{P}[e \not \in T] \\
+    &= 1 - \frac{\det(\bar{L} - x_e x_e^T)}{\det(\bar{L})} \\ 
+    &= 1 - \frac{\det(\bar{L}) (1 - x_e^T \bar{L}^{-1} x_e)}{\det(\bar{L})} \\
+    &= x_e^T \bar{L}^{-1} x_e \\
+    &= x_e^T L^{\dag} x_e
+\end{align*}
+as $L = \bar{L}$ when restricted to the subspace perpendicular to $\textbf{1}$. Thus, $\mathbb{P}[e \in T] = x_e^T L^{\dag} x_e = R_{\text{eff}}(e)$ \qed
+
+% % --------------------
+\section{Further Extensions}
+% % --------------------
+
+We can further extend this result by asking the probability of $F \subseteq T$ where $F$ is any subset of edges. In this case~\cite{burton1993} showed that $\mathbb{P}[F \subseteq T] = \det(Y_F)$ where $Y$ is a $E \times E$ matrix such that $Y(e,f) = x_e^T L^{\dag}x_f$. This can be easily proved by inducting on size of $F$ and using Cauchy-Binet formula (note that the base case $|F|=1$ is what we have proved above).
+
+When $G$ is weighted undirected graph, in which case resistance of each edge is inverse of it's weight then we have $\mathbb{P}[e \in T] = w(e)R_{\text{eff}}(e)$ where $T$ is sampled with probability proportional to $\prod_{e \in T} w(e)$. The proof is similar with the modification that we work with the weighted Laplacian and use Matrix Tree theorem for weighted graphs.
+
+
+\printbibliography
+
+\end{document}

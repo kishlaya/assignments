@@ -1,0 +1,484 @@
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Template for a conference paper, prepared for the
+%% Food and Resource Economics Department - IFAS
+%% UNIVERSITY OF FLORIDA
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Version 1.0 // November 2019
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Ariel Soto-Caro
+%%  - asotocaro@ufl.edu
+%%  - arielsotocaro@gmail.com
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[10pt]{article}
+\usepackage{format}
+
+\usepackage{amsthm}
+\theoremstyle{plain}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\newtheorem*{remark}{Remark}
+
+\usepackage {tikz}
+\usetikzlibrary {positioning}
+\definecolor {processblue}{cmyk}{0.96,0,0,0}
+
+
+\usepackage{mathtools}
+\usepackage{mathrsfs}
+\usepackage{dsfont}
+\usepackage[ruled,vlined]{algorithm2e}
+
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiterX{\inp}[2]{\langle}{\rangle}{#1, #2}
+
+\usepackage{enumitem}
+\setlist[itemize,1]{label=\textbullet}
+\setlist[itemize,2]{label=$\circ$}
+\setlist[itemize,3]{label=$\ast$}
+
+%% ===============================================
+%% Setting the line spacing (3 options: only pick one)
+% \doublespacing
+% \singlespacing
+\onehalfspacing
+%% ===============================================
+
+\setlength{\droptitle}{-5em} %% Don't touch
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% SET THE TITLE
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% TITLE:
+\title{Undirected Graph Connectivity}
+
+% AUTHORS:
+\author{Kishlaya Jaiswal\\% Name author
+    % \href{mailto:kishlaya.j@gmail.com}{\texttt{kishlaya.j@gmail.com}} %% Email author 1 
+% \and Second Author\\% Name author
+%     \href{mailto:secondauthor@ufl.edu}{\texttt{secondauthor@ufl.edu}} %% Email author 2
+% \and Third Author\\% Name author
+%     \href{mailto:thirdauthor@ufl.edu}{\texttt{thirdauthor@ufl.edu}}%% Email author 3
+%\and Forth Author\\% Name author
+%    \href{mailto:forthuthor@ufl.edu}{\texttt{forthuthor@ufl.edu}}%% Email author 4
+    }
+    
+% DATE:
+\date{\today}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ABSTRACT
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\setstretch{.8}
+\maketitle
+% %%%%%%%%%%%%%%%%%%
+\begin{abstract}
+% CONTENT OF ABS HERE--------------------------------------
+
+We will discuss the problem of st-connectivity in undirected graphs, giving a short proof for solving it in logspace using random walks and then finally we will give a detailed overview of Omer Reingold's result - solving this problem in logspace without using randomness.
+
+% END CONTENT ABS------------------------------------------
+\noindent
+\textit{\textbf{Advisor: }%
+Samir Datta} \\ %% <-- Keywords HERE!
+
+\end{abstract}
+}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% BODY OF THE DOCUMENT
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% % --------------------
+\section{Introduction}
+% % --------------------
+
+Consider the following problem: given a undirected graph $G$ and two vertices $s,t \in G$, determine if $t$ is reachable from $s$.
+
+$$USTCON = \{(G,s,t) \mid t \text{ is reachable from } s \text{ in } G\}$$
+
+Widely known algorithms for solving this problem are Breadth-First Search and Depth-First Search. The running time of these algorithms is $O(|V|+|E|)$ and requires $O(|V|)$ space, that is $USTCON \in P$.
+
+But can we do better? It is clear that we can't improve on running time. So we turn to look at this problem from the point of view of complexity theory.
+
+We know that $USTCON \in NL$, because we can non-deterministically guess the vertices on the path from $s$ to $t$ one-by-one, and description of each vertex requires only $\log |V|$ many bits. Furthermore, using Savitch's theorem we get that $USTCON \in L^2$
+
+Our next hope would be to prove $USTCON \in L$. But in making an attempt to this problem, what might seem more obvious at first is that $USTCON \in RL$, for we can do a random walk on the graph starting at $s$ with the hope that, after not-too-many steps we have a good chance to hit $t$ if $t$ was in the same connected component as $s$, otherwise it is clear that we will never hit $t$. Let's try and make this argument more precise.
+
+% % --------------------
+\section{$USTCON \in RL$}
+% % --------------------
+
+The idea is straight-forward - start a random walk at $s$ and continue until $poly(n)$ steps, where a random step is: if at vertex $u$, then choose a neighbour $v$ of $u$ uniformly at random and go to $v$. If we do not hit $t$ then we output that there is no path connecting them. We now analyze the probability of failure - not hitting $t$ even though $s$ and $t$ are in the same connected components.
+
+So let's say $s$ and $t$ are in the same component. Denote by $E_{uv}$ the expected time to hit $v$ starting at $u$ for any two vertices $u$ and $v$. Using Markov's inequality, we get: 
+$$\mathbb{P}(\text{Time taken to hit } t > K) \leq \frac{E_{st}}{K}$$
+
+The stationary distribution for this walk is $\pi$ given by $\pi(u) \sim d_u$. Using the fundamental theorem for Markov Chains, $E_{uu} = \frac{1}{\pi_{u}} = \frac{2m}{d_u}$ $\forall u \in V$.
+
+For any edge $(u,v) \in E$, we calculate $E_{uv}$ as follows:
+$$E_{uu} = \sum_{v: (u,v) \in E} \frac{1 + E_{uv}}{d_u}$$
+$$\implies E_{uv} \leq d_uE_{uu} = 2m$$
+
+Finally, let $\sigma$ be a path from $s$ to $t$ then $E_{st} \leq \sum_{(u,v) \in \sigma} E_{uv} \leq 2|\sigma|m  \leq 2m(n-1)$.
+
+Hence it suffices to take $4n^3$ many steps in our random walks so that $\mathbb{P}(\text{failure}) \leq \frac12$.
+
+% % --------------------
+\section{$USTCON \in L$}
+% % --------------------
+
+Improving from Savitch's theorem ~\cite{DBLP:conf/focs/NisanSW92} showed that $USTCON \in L^{3/2}$. Later, ~\cite{DBLP:journals/jacm/ArmoniTWZ00} improved this to $USTCON \in L^{4/3}$. Finally in 2004, ~\cite{DBLP:journals/eccc/ECCC-TR04-094} showed that $USTCON \in L$, whose proof we discuss now.
+
+We will assume that the given graph $G$ is $d$-regular and each connected component is non-bipartite. This assumption is justified because given a graph, replace each vertex $v$ with a cycle of length $d_v$ connecting each neighbour of $v$ to a unique vertex in the cycle, thus making the graph $3$-regular. Now add $d-3$ self-loops on each vertex to make it $d$-regular.
+
+We begin with a simple observation that given a $d$-regular graph with diameter atmost $\rho$ of each component, if we just did a brute-force search by checking for $t$ on all possible paths from $s$, it would require us to enumerate all $O(d^\rho)$ paths emanating from $s$ and hence take $O(\rho \log d)$ space. In general, $\rho$ can be as large as $n$. But if our graph was well-connected and we had $\rho = O(\log n)$, then we have accomplished our goal.
+
+An intuitive way to make our graph \textsl{well-connected} is by connecting each vertex to a vertex which was originally at distance $2$. This operation makes it $d^2$-regular, making our graph even more dense. But if we keep repeating this process only, then after $\log n$ steps, space complexity of enumerating all paths would turn $O(\rho \log d^{2^{\log n}}) = O(\rho n \log d)$, defeating our purpose.
+
+So we need another operation to make our graph \textsl{sparse}, keeping the degree constant. Intuitively, we will take a small graph and replace each vertex in our original graph with this small graph and edges are taken to be the "zigzag" lines. This operation is called zigzag product of graphs, makes the degree constant at the cost of deteriorating the connectedness slightly.
+
+Both these operations preserve the connected components of $G$ (Squaring preserves the connected components of $G$ because each component contains an odd-cycle). Alternating this process of squaring and zigzaging $O(\log n)$ times, we will find that $G$ becomes a well-connected sparse graph with a diameter $O(\log n)$ and constant degree. Thus, we are done.
+
+Now to make our above intuition precise, we start with the following definitions.
+
+\subsection{Expanders}
+
+As already hinted above, expanders are well-connected but sparse graphs. Well-connectedness is specified by cuts of atleast some constant size and sparseness using constant small degree.
+
+Given a graph $G$ and $S \subseteq V$, let
+$$\Gamma(u) \coloneqq \{v \mid (u,v) \in E\}$$
+$$\Gamma(S) \coloneqq \bigcup_{u \in S} \Gamma(u)$$
+
+\begin{definition}
+$G$ is said to be a $(1+\epsilon)$ \textbf{vertex-expander} if for any subset $S$ of vertices with $|S| \leq N/2$, $|\Gamma(S)| \geq (1+\epsilon)|S|$.
+\end{definition}
+
+\begin{remark}
+Let $G$ be $(1+\epsilon)$ vertex-expander for some $\epsilon > 0$ then, $G$ has logarithmic diameter
+\end{remark}
+
+Vertex expansion is a combinatorial property but it's easy to deal with algebraic properties, like spectrum of a graph and in particular, connectedness can be described using the largest (in absolute value) eigenvalue of the normalized adjacency matrix $\mathrm{A} = D^{-1/2}AD^{-1/2}$, denoted by $\lambda(G)$, that is
+
+$$\lambda(G) \coloneqq \max_{\mathbf{x} \perp \mathbf{u}, \norm{\mathbf{x}}=1} \norm{\mathrm{A}\mathbf{x}}$$
+
+where $\mathbf{u} = \frac1n \mathbf{1}$ is the uniform probability distribution on $V$.
+
+% and since $\mathbf{u} = \frac1n \mathbf{1}$ is an eigenvector of $\mathrm{A}$ with largest eigenvalue $1$, we can equivalently say
+% $$\lambda(G) = \sup_{\mathbf{x} \perp \mathbf{u}, \norm{\mathbf{x}}=1} \norm{\mathrm{A} \mathbf{x}}$$
+
+\begin{definition}
+$G$ is said to be a $(n,d,\lambda)$ \textbf{spectral-expander} if $G$ is $d$-regular graph on $n$ vertices with $\lambda(G) \leq \lambda$.
+\end{definition}
+
+Finally we have the result establishing the connection between two notions from algebra and combinatorics: every spectral expander is also a vertex expander.
+
+\begin{theorem}
+Let $G$ be a $(n,d,\lambda)$ spectral-expander then $G$ is also a $(1 + \epsilon)$ vertex-expander, where $\epsilon = \frac{1-\lambda^2}{1+\lambda^2}$
+\end{theorem}
+
+\begin{proof}
+Let $S \subseteq V$ such that $|S| \leq n/2$ and $\mathbf{x} = \chi_S/|S|$ be the uniform probability distribution on $S$. 
+
+For any probability distribution $\pi$, using Cauchy-Schwarz we get $$1 = \left(\sum_{u \in \text{support}(\pi)} \pi_u\right)^2 \leq |\text{support}(\pi)| \left(\sum_{u \in \text{support}(\pi)} \pi_u^2\right) = |\text{support}(\pi)| \norm{\pi}^2$$
+
+where $\text{support}(\pi) = \{u \mid \pi_u > 0\}$. 
+
+Since $\mathrm{A}$ is also the transition matrix for random walk on $G$, so $(\mathrm{A}\mathbf{x})$ is a probability distribution on $V$, and we have
+$$\frac{1}{|\text{support}(\mathrm{A}\mathbf{x})|} \leq  \norm{\mathrm{A}\mathbf{x}}^2 = \norm{\mathrm{A}\mathbf{x} - \mathbf{u}}^2 + \frac1n \leq \lambda(G)^2\norm{\mathbf{x} - \mathbf{u}}^2 + \frac1n$$
+
+But $\text{support}(\mathrm{A}\mathbf{x}) = \Gamma(S)$ and
+$\norm{\mathbf{x} - \mathbf{u}}^2 = \frac{1}{|S|} - \frac1n$, giving us the desired result:
+
+\begin{align*}
+    \frac{1}{\Gamma(S)} &\leq \lambda^2\left(\frac{1}{|S|}-\frac1n\right) + \frac1n \\
+    &= \frac{\lambda^2}{|S|} + \frac{1 - \lambda^2}{n} \\
+    &\leq \frac{\lambda^2}{|S|} + \frac{1 - \lambda^2}{2|S|} \\
+    \implies \Gamma(S) &\geq \left(\frac{2}{1 + \lambda^2}\right)|S|
+\end{align*}
+\end{proof}
+
+In fact, both these notions of expansion are equivalent but we don't require the converse relation for our main result.
+
+\begin{remark}
+Let $G$ be $(n,d,\lambda)$ spectral-expander where $\lambda < 1$ then $G$ has diameter $O(\log n)$ where the leading constant in our big-$O$ notation depends upon $\lambda$ (as it depends upon $\epsilon$).
+\end{remark}
+
+\subsection{Graph Squaring}
+
+Let $A$ be the adjacency matrix of $G$ then $G^2$ is the graph defined using the adjacency matrix $A^2$.
+
+Since $G$ is $d$-regular and $G^2$ is $d^2$-regular, we get that the normalized adjacency matrix of $G^2$ is the square of normalized adjacency matrix of $G$. Thus $\lambda(G^2) = \lambda(G)^2$.
+
+So squaring improves the spectral expansion at the cost of exploding the degree of a graph. In particular, if $G$ is $(n,d,\lambda)$ expander then $G^2$ is a $(n,d^2,\lambda^2)$ expander.
+
+\subsection{Zigzag product}
+
+Let $G$ be $(n,d_1,\lambda_1)$ expander and $H$ be $(d_1, d_2, \lambda_2)$ expander.
+
+Define $G \textcircled{z} H$ as a graph on the vertex set $V(G) \times V(H)$.
+
+In $G$, label each neighbour of a vertex $u$ from $\{1 \ldots d_1\}$ so that $u[i]$ represents the $i^{th}$ neighbour of $u$. For example: here $u[2] = v$ and $v[3] = u$
+
+\begin{center}
+\begin{tikzpicture}[shorten >=1pt,->]
+  \tikzstyle{vertex}=[circle ,top color =white , bottom color = processblue!20 ,
+draw,processblue , text=blue , minimum width =1 cm]
+  \node[vertex] (G_1) at (-2.5,0)  {u};
+  \node[vertex] (G_2) at (2.5,0)  {v};
+
+  \draw (G_1) -- (-3,2) -- cycle node[midway,above] {1};
+  \draw (-2,0) -- node[below] {2} ++(2,0) -- node[above] {3} ++(2,0) -- cycle;
+  \draw (G_1) -- (-3,-2) -- cycle node[midway,above] {3};
+  \draw (G_1) -- (-5,-1) -- cycle node[midway,above] {4};
+  \draw (G_1) -- (-5,1) -- cycle node[midway,above] {5};
+  \draw (G_2) -- (4,1.5) -- cycle node[midway,above] {1};
+  \draw (G_2) -- (4,-1.5) -- cycle node[midway,above] {2};
+\end{tikzpicture}
+\end{center}
+
+Now take any $d_2$-regular graph $H$ on $d_1$ vertices (we label the vertices from $\{1 \ldots d_1\}$), and replace each vertex in $G$ with a \textsl{cloud} $H$, that is consider a graph on vertex set $V(G) \times V(H)$ with the following edges: Suppose you're at a vertex $(u,i)$. Choose any neighbour $i'$ of $i$ and go to $(u,i')$. Use this index $i'$ to go to a different cloud which is $(v, j')$ where $v = u[i']$ and $u = v[j']$. Finally choose any neighbour $j$ of $j'$ and go to $(v,j)$. Add an edge between $(u,i)$ and $(v,j)$.
+
+\begin{center}
+\begin{tikzpicture}[shorten >=1pt,->]
+  \tikzstyle{vertexg}=[circle ,top color =white , bottom color = processblue!20 ,
+draw,processblue , text=blue , minimum width =3.5 cm]
+  \tikzstyle{vertexh}=[circle ,top color =white , bottom color = white ,
+draw,black , text=black , minimum width =.5 cm]
+  \node[vertexg] (G_1) at (0,2.5)  {u};
+  \node[vertexg] (G_2) at (0,-2.5)  {v};
+  
+  \node[vertexh] (H_1) at (-1, 2) {i};
+  \node[vertexh] (H_2) at (1, 2) {i'};
+  
+  \node[vertexh] (H_3) at (-1, -2) {j'};
+  \node[vertexh] (H_4) at (1, -2) {j};
+  
+  \draw[dashed, processblue] (H_1) -- (H_2) -- cycle;
+  \draw[dashed, processblue] (H_2) -- (H_3) -- cycle;
+  \draw[dashed, processblue] (H_3) -- (H_4) -- cycle;
+  
+  \draw (H_1) -- (H_4) -- cycle;
+\end{tikzpicture}
+\end{center}
+
+Notice that from $(u,i)$ there are $d_2$ many choices for $(u,i')$. $(v,j')$ is already determined from $(u,i')$. And from $(v,j')$ there are $d_2$ many choices for $(v,j)$. Hence degree of any vertex is $d_2^2$.
+
+\begin{theorem}[~\cite{DBLP:journals/eccc/ECCC-TR01-018}]
+$G \textcircled{z} H$ is a $(nd_1, d_2^2, f(\lambda_1, \lambda_2))$ expander where $$f(\lambda_1, \lambda_2) = \frac12 (1 - \lambda_2^2)\lambda_1 + \frac12 \sqrt{(1 - \lambda_2^2)^2\lambda_1^2 + 4\lambda_2^2}$$
+\end{theorem}
+
+\begin{corollary}
+If $\lambda_2 \leq \frac12$ then $1-f(\lambda_1, \lambda_2) \geq \frac13(1-\lambda_1)$
+\end{corollary}
+
+\begin{proof}
+Since $\lambda_1 \leq 1$
+$$\sqrt{(1 - \lambda_2^2)^2\lambda_1^2 + 4\lambda_2^2} \leq \sqrt{(1 - \lambda_2^2)^2 + 4\lambda_2^2} = \frac12 (1 + \lambda_2^2) = 1 - \frac12 (1 - \lambda_2^2)$$
+$$1 - f(\lambda_1, \lambda_2) \geq \frac12 (1 - \lambda_2^2) - \frac12 (1 - \lambda_2^2)\lambda_1 = \frac12 (1 - \lambda_2^2)(1-\lambda_1)$$
+Thus, $\lambda_2 \leq \frac12 \implies 1 - f(\lambda_1, \lambda_2)\geq  \frac38( 1- \lambda_1) \geq \frac13( 1- \lambda_1)$
+\end{proof}
+
+\subsection{Existence of a small expander}
+
+To begin our algorithm, we need to start with a good expander for zigzaging our graph with. ~\cite{DBLP:journals/eccc/ECCC-TR01-018} give an explicit construction of graph $U$ which is $(D^{8}, D, 1/5)$ expander, for some constant $D$.
+
+Then we define 
+\begin{align*}
+    G_1 &= U^8 \text{ \textcircled{z} } U \\
+    G_2 &= G_1^4 \text{ \textcircled{z} } U \\
+    H &= G_2^4 \text{ \textcircled{z} } U \\
+\end{align*}
+
+\begin{lemma}
+$H$ is a $(d_0^{16}, d_0, 1/2)$ expander (where $d_0 = D^2$)
+\end{lemma}
+
+\begin{proof}
+Using the above-mentioned theorem , we get
+
+$G_1$ is a $(D^{16}, D^2, 1/4)$ expander as $\frac12 (1 - \frac{1}{5^2})\frac{1}{5^8} + \frac12 \sqrt{(1 - \frac{1}{5^2})^2\frac{1}{25^8} + 4\frac{1}{5^2}} < \frac14$
+
+$G_2$ is a $(D^{24}, D^2, 1/4)$ expander as $\frac12 (1 - \frac{1}{5^2})\frac{1}{4^4} + \frac12 \sqrt{(1 - \frac{1}{5^2})^2\frac{1}{16^4} + 4\frac{1}{5^2}} < \frac14$
+
+$H$ is a $(D^{32}, D^2, 1/2)$ expander as $\frac12 (1 - \frac{1}{5^2})\frac{1}{4^4} + \frac12 \sqrt{(1 - \frac{1}{5^2})^2\frac{1}{16^4} + 4\frac{1}{5^2}} < \frac14 < \frac12$
+
+Hence, $H$ is a $(d_0^{16}, d_0, 1/2)$ expander, as required.
+\end{proof}
+
+% ~\cite{DBLP:journals/eccc/ECCC-TR01-018} showed that there exists a constant $d_0$ and a graph $H$ which is $(d_0^{16}, d_0, 1/2)$ expander.
+
+\subsection{Reingold's algorithm}
+
+It is now clear that if we fix any two \textsl{constants} $d$ and $\lambda < 1$, then for any input graph $G$ such that each component of $G$ is a $(n,d,\lambda)$ expander, we can solve the connectivity problem (restricted to these class of graphs) in logspace.
+
+Thus, we take these constants to be $d = d_0^{16}$ and $\lambda = \frac12$ and then it suffices to show how to convert any graph $G$ into a $(O(n),d_0^{16},1/2)$ expander.
+
+\medskip
+
+\begin{algorithm}[H]
+\SetAlgoLined
+ Input: $G$
+ 
+ Convert $G$ into a $d_0^{16}$ regular graph by replacing each vertex with a cycle and adding self-loops
+ 
+ Set $l = 2\ceil{\log (d_0^{16}n^2)}$
+ 
+ Let $G_0 = G$
+ 
+ \For{$i\gets1$ \KwTo $l$}{
+    compute $G_i = (G_{i-1} \textcircled{z} H)^8$
+ }
+ 
+ Output $G_l$
+ \caption{Transform $G$ such that each component is a $(O(n),d_0^{16}, 1/2)$ expander}
+\end{algorithm}
+
+\medskip
+
+We mention once again that both the operations: squaring and zigzag product preserve the connected components, that is $s$ and $t$ are connected in $G$ iff they are connected in $G_l$.
+
+\subsection{Analysis}
+
+We assume that $G$ is connected because if $G$ has multiple connected components, then we can apply the same analysis for each component separately.
+
+\begin{lemma}
+Each $G_i$ $(0 \leq i \leq l)$ is a graph on $n(d_0)^{16i}$ vertices and is $d_0^{16}$-regular
+\end{lemma}
+
+\begin{proof}
+We proceed by induction on $i$. For $i=0$ it follows immediately. Now suppose it is true for for some $i$, that is $G_i$ is $(n(d_0)^{16i}, d_0^{16}, \lambda)$ expander for some $\lambda$. Since $H$ is $(d_0^{16}, d_0, 1/2)$ expander, we get $G_i \textcircled{z} H$ is a $(n(d_0)^{16(i+1)}, d_0^{2}, \lambda')$ expander for some $\lambda'$. 
+
+Therefore, $G_{i+1} = (G_i \textcircled{z} H)^8$ is a graph on $n(d_0)^{16(i+1)}$ vertices and is $d_0^{16}$-regular.
+\end{proof}
+
+\begin{remark}
+Thus, each of the zigzag products in our algorithm is valid and $G_l$ is a $d_0^{16}$-regular graph on $O(n)$ vertices.
+\end{remark}
+
+\begin{lemma}
+If $l = 2\ceil{\log d_0^{16}n^2}$ then $\left(1 - \frac{1}{d_0^{16}n^2}\right)^{2^l} \leq \frac12$
+\end{lemma}
+
+\begin{proof}
+$$2\ceil{\log x} \leq 2\log x + 2 \implies 2^l \leq 4x^2$$
+$$\implies \left(1 - \frac{1}{x}\right)^{2^l} \leq \left(1 - \frac{1}{x}\right)^{4x^2} \leq \frac12, \forall x \geq 1$$
+\end{proof}
+
+Now let $1 > \lambda_2 \geq \cdots \geq \lambda_n$ be the eigenvalues of $\mathrm{A}$, then by our definition $\lambda(G) = \max \{\lambda_2, |\lambda_n|\}$
+
+\begin{lemma}[\cite{DBLP:journals/cpc/AlonS00}]
+Let $G$ be $d$-regular non-bipartite graph with diameter $D$ on $n$ vertices, then
+$$1 + \lambda_n \geq \frac{1}{d(D+1)n}$$
+\end{lemma}
+
+\begin{lemma}
+For any $d$-regular, connected graph $G$ on $n$ vertices, $$1 - \lambda_2 \geq\frac{1}{dn^2}$$
+\end{lemma}
+
+\begin{proof}
+Using Rayleigh's theorem, we know that
+$$\lambda_2 = \sup_{\mathbf{x} \perp \mathbf{u}, \norm{\mathbf{x}} = 1} \mathbf{x}^T\mathrm{A}\mathbf{x}$$
+
+Note that,
+\begin{align*}
+    \mathbf{x}^T\mathrm{A}\mathbf{x} &= \sum_u \sum_v \mathrm{A}(u,v)x(u)x(v) \\
+    &= \frac1d \sum_u \sum_{v \sim u} x(u)x(v) \\
+    &= \frac1d \sum_{(u,v) \in E} 2x(u)x(v) \\
+    &= \frac1d \sum_{(u,v) \in E} x(u)^2 + x(v)^2 - (x(u) - x(v))^2 \\
+    &= \frac1d \sum_{(u,v) \in E} (x(u)^2 + x(v)^2) - \frac1d \sum_{(u,v) \in E} (x(u) - x(v))^2 \\
+    &= 1 - \frac1d \sum_{(u,v) \in E} (x(u) - x(v))^2 \\
+    \implies 1 - \mathbf{x}^T\mathrm{A}\mathbf{x} &= \frac1d \sum_{(u,v) \in E} (x(u) - x(v))^2 \\
+\end{align*}
+
+Since $\{\mathbf{x} \perp \mathbf{u}, \norm{\mathbf{x}} = 1\}$ is a compact space, we can find a vector $\mathbf{x}$ such that $\lambda_2 = \mathbf{x}^T\mathrm{A}\mathbf{x}$.
+
+Since $\sum_{u} x(u)^2 = 1$, there is a vertex $u_0$ such that $x(u_0) \geq 1/\sqrt{n}$. Further, since $\sum_u x(u) = 0$, choose a vertex $v_0$ such that $x(v_0) < 0$. Thus, $|x(u_0) - x(v_0)| \geq 1/\sqrt{n}$. Since $G$ is connected, fix a path $P$ from $u_0$ to $v_0$.
+
+\begin{align*}
+    1 - \lambda_2 &= 1 - \mathbf{x}^T\mathrm{A}\mathbf{x} \\ 
+    &= \frac1d \sum_{(u,v) \in E} (x(u) - x(v))^2 \\
+    &\geq \frac1d \sum_{(u,v) \in P} (x(u) - x(v))^2 \\
+    &\geq \frac{1}{d} \frac{1}{|P|} \left(\sum_{(u,v) \in P} |x(u) - x(v)| \right)^2 \\
+    &\geq \frac{1}{dn} \bigg(|x(u_0) - x(v_0)| \bigg)^2 \\
+    &\geq \frac{1}{dn^2}
+\end{align*}
+\end{proof}
+
+\begin{corollary}
+For any $d$-regular, connected, non-bipartite graph $G$ on $n$ vertices, $$\lambda(G) \leq 1 - \frac{1}{dn^2}$$
+\end{corollary}
+
+\begin{proof}
+If $\lambda_n > 0$, then $\lambda(G) = \lambda_2 \leq 1 - \frac{1}{dn^2}$
+
+Otherwise, $\lambda_n < 0 \implies |\lambda_n| = -\lambda_n \leq 1 - \frac{1}{dn^2}$ and hence $\lambda(G) = \max \{\lambda_2, |\lambda_n|\} \leq 1 - \frac{1}{dn^2}$
+\end{proof}
+
+\begin{lemma}
+$\lambda(G_i) \leq \max \{\lambda(G_{i-1})^2, \frac12\}$ $\forall 1 \leq i \leq l$
+\end{lemma}
+
+\begin{proof}
+Let $\lambda(G_{i-1}) = \lambda$.
+
+If $\lambda \leq 1/2$ then $\lambda(G_{i-1} \textcircled{z} H) \leq 1 - 1/6 = 5/6$. So $\lambda(G_i) \leq (5/6)^8 \leq 1/2$
+
+Otherwise $\lambda > 1/2$ then $\lambda(G_{i-1} \textcircled{z} H) \leq 1 - \frac13(1-\lambda)$ and 
+$$\left(1 - \frac13(1-\lambda)\right)^4 = \left(\frac{\lambda+2}{3}\right)^4 \leq \lambda, \forall \lambda \in [1/2,1]$$ 
+
+So $\lambda(G_i) \leq \lambda(G_{i-1})^2$
+\end{proof}
+
+
+\begin{lemma}
+$\lambda(G_l) \leq 1/2$
+\end{lemma}
+
+\begin{proof}
+Suppose for some $1 \leq i \leq l-1$, $\lambda(G_i) \leq \frac12$, then $$\lambda(G_{i+1}) \leq \max \left(\lambda(G_{i})^2, \frac12\right) \leq \max \left(\frac14, \frac12\right) = \frac12$$ and hence $\lambda(G_l) \leq \frac12$ by induction. Otherwise if $\lambda(G_i) > \frac12$ $\forall 1 \leq i \leq l-1$, then $$\lambda(G_l) \leq \lambda(G_{l-1})^2 \leq \lambda(G_{l-2})^{2^2} \leq \cdots \leq \lambda(G_0)^{2^l} \leq \left(1 - \frac{1}{d_0^{16}n^2}\right)^{2^l} \leq \frac12$$
+\end{proof}
+
+
+\subsection{Implementation}
+
+\begin{definition}
+Given a $d$-regular graph $G = (V,E)$ along with each neighbour of each vertex labelled from $[d] = \{1 \ldots d\}$, define $\text{Rot}_G: V \times [d] \rightarrow V \times [d]$ such that
+$$\text{Rot}_G(u,i) = (v,j)$$
+where $v=u[i]$ and $u=v[j]$
+\end{definition}
+
+\begin{remark}
+An adjacency list/matrix of a graph can be converted to rotation map using $O(\log n)$ space.
+\end{remark}
+
+On a final note, we mention that using the \textsl{Rotation Map Representation} of graphs, we can implement the above algorithm in logspace.
+
+That is, all the three steps:
+\begin{itemize}
+    \item Converting $G$ into $d_0^{16}$-regular non-bipartite graph
+    \item Squaring a graph
+    \item Taking zigzag product with $H$ ($H$ is a constant graph and can be directly encoded on a TM)
+\end{itemize}
+can be effected in $O(\log n)$ space.
+
+
+\printbibliography
+
+
+\end{document}
