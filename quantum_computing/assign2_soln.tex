@@ -1,0 +1,184 @@
+ \documentclass{article}
+\usepackage[margin=1in]{geometry}
+\setlength{\parindent}{0in}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{latexsym,amsfonts,amssymb,amsthm,amsmath}
+\usepackage {tikz}
+\usetikzlibrary {positioning}
+\usetikzlibrary{quantikz}
+
+\usepackage{braket}
+
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+\title{Quantum Computing - Assignment 2}
+\author{Kishlaya Jaiswal}
+
+\begin{document}
+
+\maketitle
+
+
+\subsection*{Exercise 1}
+\begin{proof} .
+
+\begin{center}
+\begin{quantikz}
+\lstick{$\ket{0}^{\otimes n}$} & \gate{H^{\otimes n}} & \qw & \gate[wires=2]{U_f} & \qw & \gate{H^{\otimes n}} & \qw & \meter{} & \qw \\
+\lstick{$\ket{1}$} & \gate{H} & \qw & & \qw \\
+\end{quantikz}
+\end{center}
+
+where $f: \mathbb{Z}_2^n \rightarrow \mathbb{Z}_2$, $f(x) = \sum a_ix_i$ \\
+
+First we prepare the state: 
+$$\ket{0}^{\otimes n} \otimes \ket{1}$$ 
+
+Applying $n+1$ Hadamard gates, we get: 
+$$\left( \frac{1}{2^{n/2}} \sum_x \ket x \right) \otimes \left(\frac{\ket0 - \ket1}{\sqrt2}\right) = \frac{1}{2^{n/2}} \frac{1}{\sqrt2} \sum_x \ket x \ket0 - \ket x \ket1$$
+
+Applying $U_f$, we get: 
+$$\frac{1}{2^{n/2}} \frac{1}{\sqrt2} \sum_x \ket x \ket{f(x)} - \ket x \ket{\overline{f(x)}} = \left( \frac{1}{2^{n/2}} \sum_x (-1)^{f(x)} \ket x \right) \otimes \left(\frac{\ket0 - \ket1}{\sqrt2}\right)$$
+
+Let us carefully examine the first $n$ qubits at this point.
+
+First, say $x = x_1\ldots x_n$, then 
+$$(-1)^{f(x)} \ket x = (-1)^{a_1x_1 + \cdots a_nx_n} \ket{x_1 \ldots x_n} = \bigg((-1)^{a_1x_1} \ket{x_1}\bigg) \otimes \cdots \otimes \bigg((-1)^{a_nx_n} \ket{x_n}\bigg)$$ 
+
+Thus, the first $n$ qubits are: 
+\begin{align*}
+    \frac{1}{2^{n/2}} \sum_x (-1)^{f(x)} \ket x &= \bigg(\sum_{x_1} \frac{(-1)^{a_1x_1} \ket{x_1}}{\sqrt2}\bigg) \otimes \cdots \otimes \bigg(\sum_{x_n} \frac{(-1)^{a_nx_n} \ket{x_n}}{\sqrt2}\bigg) \\
+    &= \bigg(\frac{\ket0 + (-1)^{a_1}\ket1}{\sqrt2} \bigg) \otimes \cdots \otimes \bigg(\frac{\ket0 + (-1)^{a_n}\ket1}{\sqrt2} \bigg) \\
+\end{align*}
+
+Now we recall that $$H\bigg(\frac{\ket0 + (-1)^x\ket1}{\sqrt2}\bigg) = \ket x$$
+
+Thus applying $n$ Hadamard gates to the first $n$ qubits, we get:
+$$\ket{a_1 \ldots a_n}$$
+\end{proof}
+
+
+\subsection*{Exercise 2}
+\begin{proof}
+First we prove by induction on $n$ that for $x \in \{0,1\}^n$, $$H^{\otimes n}\ket x = \frac{1}{2^{n/2}} \sum_{z \in \{0,1\}^n} (-1)^{x.z} \ket z $$
+
+For $n=1$, it follows immediately as 
+$$H\ket x = \frac{1}{\sqrt2} \sum_z (-1)^{x.z} \ket z = \frac{\ket0 + (-1)^x \ket1}{\sqrt2}$$
+
+Suppose it is true for some $n \geq 1$, then for any $x' \in \{0,1\}^{n+1}$, write $x' = xx_{n+1}$ where $x \in \{0,1\}^n$, then
+
+\begin{align*}
+    H^{\otimes n+1}\ket{x'} &= H^{\otimes n+1}(\ket{x} \otimes \ket{x_{n+1}}) \\
+    &= H^{\otimes n}\ket{x} \otimes H\ket{x_{n+1}} \\ 
+    &= \frac{1}{2^{n/2}} \sum_{z \in \{0,1\}^n} (-1)^{x.z} \ket z \otimes \left(\frac{\ket0 + (-1)^{x_{n+1}}\ket1}{\sqrt2}\right) \\
+    &= \frac{1}{2^{n+1/2}} \sum_{z \in \{0,1\}^n} (-1)^{x.z + + x_{n+1}.0} \ket z \otimes \ket0 + (-1)^{x.z + x_{n+1}.1} \ket z \otimes \ket1 \\
+    &= \frac{1}{2^{n+1/2}} \sum_{z' \in \{0,1\}^{n+1}} (-1)^{x'.z'} \ket{z'}
+\end{align*}
+
+Now, we consider
+\begin{align*}
+    H\left(\frac{\ket x + \ket y}{\sqrt2}\right) &= H\left(\frac{\ket x + \ket{s \oplus x}}{\sqrt2}\right) \\
+    &= \frac{1}{\sqrt2} H\ket{x} + \frac{1}{\sqrt2} H\ket{s \oplus x} \\
+    &= \frac{1}{\sqrt2} \frac{1}{2^{n/2}} \sum_z (-1)^{x.z} \ket z +  \frac{1}{\sqrt2} \frac{1}{2^{n/2}} \sum_z (-1)^{x.z + s.z} \ket z \\
+    &= \frac{1}{2^{n+1/2}} \sum_z (-1)^{x.z} \big(1 + (-1)^{s.z}\big) \ket z \\
+    &= \frac{1}{2^{n-1/2}} \sum_{s.z = 0} (-1)^{x.z} \ket z \\
+    &= \frac{1}{2^{n-1/2}} \sum_{z \perp s} (-1)^{x.z} \ket z
+\end{align*}
+
+\end{proof}
+
+
+\subsection*{Exercise 3}
+\begin{proof}
+$\ket S = \sum_{s \in S} \frac{1}{2^{m/2}} \ket s$
+
+\begin{align*}
+    H\ket S &=  \sum_{s \in S} \frac{1}{2^{m/2}} H\ket s \\
+    &=  \sum_{s \in S} \frac{1}{2^{m/2}} \frac{1}{2^{n/2}} \sum_{w} (-1)^{s.w} \ket w \\
+    &=  \sum_{w} \frac{1}{2^{(n+m)/2}} \left(\sum_{s \in S} (-1)^{s.w} \right) \ket w \\
+\end{align*}
+
+\textbf{Claim}: $w \in S^{\perp} \implies \sum_{s \in S} (-1)^{s.w} = 2^m$
+
+Because if $w \in S^{\perp} \implies s.w = 0, \forall s \in S \implies \sum_{s \in S} (-1)^{s.w} = |S| = 2^m$ \\
+
+\textbf{Claim}: $w \not \in S^{\perp} \implies \sum_{s \in S} (-1)^{s.w} = 0$
+
+Fix a basis $\{s_1, s_2, \ldots, s_m\}$ for $S$. Since $w \not \in S^{\perp}$, there exists $i$ such that $s_i.w = 1$. Now for any $s \in S$, $s = c_1s_1 + \cdots + c_ms_m$, where $c = (c_1, c_2, \ldots) \in \mathbb{Z}_2^m$. Thus,
+
+\begin{align*}
+    \sum_{s \in S} (-1)^{s.w} &= \sum_{c \in \mathbb{Z}_2^m} (-1)^{c_1 s_1.w}(-1)^{c_2 s_2.w} \ldots (-1)^{c_m s_m.w} \\
+    &= (1 + (-1)^{s_1.w})(1 + (-1)^{s_2.w}) \ldots (1 + (-1)^{s_i.w}) \ldots (1 + (-1)^{s_m.w}) \\
+    &= (1 + (-1)^{s_1.w})(1 + (-1)^{s_2.w}) \ldots (1 + (-1)) \ldots (1 + (-1)^{s_m.w}) \\
+    &= 0
+\end{align*}
+
+Therefore, 
+$$H\ket S = \frac{1}{2^{(n-m)/2}} \sum_{w \in S^{\perp}} \ket w$$
+
+Furthermore, for any $y \in \mathbb{Z}_2^n$
+
+\begin{align*}
+    H\ket{y+S} &=  \sum_{s \in S} \frac{1}{2^{m/2}} H\ket{y+s} \\
+    &=  \sum_{s \in S} \frac{1}{2^{(n+m)/2}} \sum_{w} (-1)^{(y+s).w} \ket w \\
+    &=  \frac{1}{2^{(n+m)/2}} \sum_{w} (-1)^{y.w} \left(\sum_{s \in S} (-1)^{s.w} \right) \ket w \\
+    &= \frac{1}{2^{(n-m)/2}} \sum_{w \in S^{\perp}} (-1)^{y.w}\ket w
+\end{align*}
+
+\end{proof}
+
+\subsection*{Exercise 4}
+
+\begin{proof}
+
+Suppose $X_j = i$ is known. So $V_i = \langle w_1, \ldots w_i \rangle$ has dimension $j$.
+
+\begin{align*}
+    P[X_{j+1} = i+1] = P[w_{i+1} \not \in V_i] = 1 - P[w_{i+1} \in V_i] = 1 - \frac{2^j}{2^m}
+\end{align*}
+
+\begin{align*}
+    P[X_{j+1} = i+2] &= P[w_{i+2} \not \in V_i, w_{i+1} \in V_i] \\
+    &= P[w_{i+2} \not \in V_i] P[w_{i+1} \in V_i] \\
+    &= \frac{2^j}{2^m} \left(1 - \frac{2^j}{2^m}\right)
+\end{align*}
+
+Similarly, 
+
+\begin{align*}
+    P[X_{j+1} = i+k] &= P[w_{i+k} \not \in V_i, w_{i+k-1} \in V_i, \ldots w_{i+1} \in V_i] \\
+    &= P[w_{i+k} \not \in V_i] P[w_{i+k-1} \in V_i] \ldots P[w_{i+1} \in V_i] \\
+    &= \left(1 - \frac{2^j}{2^m}\right)\left(\frac{2^j}{2^m}\right)^{k-1}
+\end{align*}
+
+Let $p_j = 2^{j}/2^m$, then
+
+\begin{align*}
+    E[X_{j+1} \mid X_{j} = i] &= \sum_{k \geq 1} (i+k) P[X_{j+1} = i+k] \\
+    &= \sum_{k \geq 1} (i+k) \left(1 - p_j\right) p_j^{k-1} \\
+    &= i \left(1 - p_j\right) \sum_{k \geq 1} p_j^{k-1} + (1 - p_j) \sum_{k \geq 1} k p_j^{k-1} \\
+    &= i + \frac{1}{1-p_j} \\
+\end{align*}
+
+As $E[X_{j+1} \mid X_j] = X_j + \frac{1}{1-p_j}$ and $E[X_{j+1}] = E[E[X_{j+1} \mid X_j]]$, we get $E[X_{j+1}] = E[X_j] + \frac{1}{1-p_j}$
+
+Similarly, we can calculate $E[X_1] = \frac{1}{1-p_0}$. Thus,
+
+\begin{align*}
+    E[X_m] &= E[X_{m-1}] + \frac{1}{1-p_{m-1}} \\
+    &= \sum_{j=0}^{m-1} \frac{1}{1-p_j} \\
+    &= \sum_{j=0}^{m-1} \frac{2^m}{2^m - 2^j} \\
+    &= \sum_{j=0}^{m-1} 1 + \frac{2^j}{2^m - 2^j} \\
+    &= m + \left(\sum_{j=1}^{m} \frac{1}{2^j - 1 }\right) \\
+    &< m + \left(\sum_{j=1}^{m} \frac{1}{2^{j-1} }\right) & (\text{as } 1 \leq 2^{j-1} \forall j \geq 1) \\ 
+    &< m + \left(\sum_{j=0}^{\infty} \frac{1}{2^{j} }\right) \\
+    &= m + 2
+\end{align*}
+
+Thus, $E[X_m] < m+2$
+\end{proof}
+
+\end{document}
+

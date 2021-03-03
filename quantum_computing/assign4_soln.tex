@@ -1,0 +1,184 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\setlength{\parindent}{0in}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{latexsym,amsfonts,amssymb,amsthm,amsmath,mathtools,commath}
+
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\Id}{Id}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\usepackage{braket}
+\usepackage{mathrsfs}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem*{lemma}{Lemma}
+\newtheorem*{corollary}{Corollary}
+
+
+\title{Quantum Computing - Assignment 4}
+\author{Kishlaya Jaiswal}
+
+\begin{document}
+
+\maketitle
+
+\subsection*{Exercise 1}
+
+Let $x \in \mathbb{Z}_N^*$ where $N = p_1^{\alpha_1} \ldots p_l^{\alpha_l}$.
+
+Let $r$ be the order of $x \pmod{N}$ and $r_i$ be the order of $x \pmod{p_i^{\alpha_i}}$. Notice that $r$ is the lcm of $r_1, r_2, \ldots, r_l$
+
+Denote by $\nu_2(n)$ the largest power of $2$ dividing $n$.
+
+Note that $r_i \mid r$ for each $1 \leq i \leq l$. So if $r$ is odd then so are $r_i$; otherwise if $x^{r/2} \equiv -1 \pmod{N}$ then $x^{r/2} \equiv -1 \pmod{p_i^{\alpha_i}}$ and so $r_i \nmid (r/2) \implies$ $\nu_2(r) = \nu_2(r_i)$ for each $1 \leq i \leq l$. We get
+
+$$P(r \text{ is odd or } x^{r/2} \equiv -1 \pmod{N}) \leq P(\text{largest power of 2 that divides each } r_i \text{ is same})$$
+
+Now we quote a lemma (from Nielsen and Chuang) which uses the fact that $\mathbb{Z}_{p^{\alpha}}^*$ is cyclic for odd prime $p$, to estimate the fraction of elements with particular largest power of $2$ in the order of any element of $\mathbb{Z}_{p^{\alpha}}^*$:
+\begin{lemma}
+Let $p$ be an odd prime. Let $\nu_2\left(\abs{\mathbb{Z}_{p^{\alpha}}^*}\right) = d$. Then
+$$P(2^d \text{ divides order of a randomly chosen element of } \mathbb{Z}_{p^{\alpha}}^*) = \frac12$$ 
+\end{lemma}
+
+As a corollary, we immediately get that if $y$ is chosen randomly from $\mathbb{Z}_{p^{\alpha}}^*$ then for any $n$
+
+$$P(\nu_2(y) = n) \leq \frac12$$
+
+Using Chinese Remainder Theorem and that $|\mathbb{Z}_N^*| = |\mathbb{Z}_{p_1^{\alpha_1}}^*| \ldots |\mathbb{Z}_{p_l^{\alpha_l}}^*|$, we get that choosing $x$ at random from $\mathbb{Z}_N^*$ is equivalent to choosing $x_i$ at random from $\mathbb{Z}_{p_i^{\alpha_i}}^*$ independently for each $1 \leq i \leq l$. We argue by induction on $l \geq 2$, that $P(\text{largest power of 2 that divides each } r_i, 1 \leq i \leq l, \text{ is same}) = P(\nu_2(r_1) = \cdots = \nu_2(r_l)) \leq \frac{1}{2^{l-1}}$
+
+If $l=2$, then set $m = \nu_2\left(\abs{\mathbb{Z}^*_{p_2^{\alpha_2}}}\right)$
+\begin{align*}
+    P(\nu_2(r_1) = \nu_2(r_2)) &= \sum_{k=0}^m P(\nu_2(r_1) = \nu_2(r_2), \nu_2(r_2) = k) \\
+    &= \sum_k P(\nu_2(r_1) = k) P(\nu_2(r_2) = k) \\
+    &\leq \frac12 \sum_k P(\nu_2(r_1) = k) \\
+    &\leq \frac12 P(\nu_2(r_1) \geq 0) \\
+    &= \frac{1}{2}
+\end{align*}
+
+Suppose it is true for some $l-1 \geq 2$, then set $m = \nu_2\left(\abs{\mathbb{Z}^*_{p_l^{\alpha_l}}}\right)$
+\begin{align*}
+    P(\nu_2(r_1) = \cdots = \nu_2(r_l)) &= \sum_{k=0}^m P(\nu_2(r_1) = \cdots = \nu_2(r_l), \nu_2(r_l) = k) \\
+    &= \sum_k P(\nu_2(r_1) = \cdots = \nu_2(r_{l-1}) = k) P(\nu_2(r_l) = k) \\
+    &\leq \frac12 \sum_k P(\nu_2(r_1) = \cdots = \nu_2(r_{l-1}) = k) \\
+    &\leq \frac12 P(\nu_2(r_1) = \cdots = \nu_2(r_{l-1})) \\
+    &\leq \frac12 \left(\frac{1}{2^{l-2}}\right) \text{ (by inductive hypothesis)} \\
+    &= \frac{1}{2^{l-1}}
+\end{align*}
+
+Therefore, we get 
+\begin{align*}
+    P(x \text{ is good}) &= 1 - P(x \text{ is not good}) \\
+    &= 1 - P(r \text{ is odd or } x^{r/2} \equiv -1 \pmod{N}) \\
+    &\geq 1 - P(\text{largest power of 2 that divides each } r_i \text{ is same}) \\
+    &\geq 1 - \frac{1}{2^{l-1}}
+\end{align*}
+
+
+
+
+
+\subsection*{Exercise 2}
+
+Let $a_0, a_1, \ldots$ be a sequence of positive reals then denote by
+$$[a_0, \ldots a_n] = a_0 + \frac{1}{a_1+\frac{1}{a_2 + \frac{1}{\cdots + \frac{1}{a_n}}}}$$
+
+We have the following lemma (from Nielsen and Chuang):
+\begin{lemma}
+Let $a_0, a_1, \ldots $ be a sequence of positive reals and sequences $p_n, q_n$ defined inductively by $p_0 = a_0, p_1 = 1 + a_0a_1$ and $q_0 = 1, q_1 = a_1$ and for all $n \geq 2$
+$$p_n = a_n p_{n-1} + p_{n-2}$$
+$$q_n = a_n q_{n-1} + q_{n-2}$$
+then $\frac{p_n}{q_n} = [a_0, \ldots, a_n]$
+\end{lemma}
+
+As a corollary we immediately get the following results
+\begin{corollary}
+Let $a_0, a_1, \ldots$ be a sequence of positive integers and $\frac{p_n}{q_n} = [a_0, \ldots, a_n]$ then $\forall n\geq 0$
+\begin{itemize}
+    \item $p_n, q_n$ are positive integers
+    \item $q_n p_{n-1} - p_n q_{n-1} = (-1)^n$
+    \item $(p_n, q_n) = 1$
+    \item Both $p_n$ and $q_n$ are strictly increasing sequence
+\end{itemize}
+\end{corollary}
+
+\begin{proof}
+Clearly $p_0 = a_0, p_1 = 1 + a_0a_1$ and $q_0 = 1, q_1 = a_1$ are integers. Now using strong induction we get that $p_n = a_np_{n-1} + p_{n-2}, q_n = a_nq_{n-1} + q_{n-2}$ are integers. \\
+
+For $n=1$, $q_1 p_0 - p_1 q_0 = a_0a_1 - (1 + a_0a_1) = (-1)$. Assume $q_{n-1} p_{n-2} - p_{n-1} q_{n-2} = (-1)^{n-1}$, then we have
+
+$$q_n p_{n-1} - p_n q_{n-1} = (a_n q_{n-1} + q_{n-2})p_{n-1} - (a_n p_{n-1} + p_{n-2})q_{n-1} = -(q_{n-1} p_{n-2} - p_{n-1} q_{n-2}) = (-1)^n$$
+
+If $d \mid p_n$ and $d \mid q_n$ then $d \mid q_n p_{n-1} - p_n q_{n-1} \implies d \mid (-1)^n$. Hence $(p_n, q_n) = 1$.
+
+As $p_n$ and $q_n$ are both strictly positive sequence and $a_n$ is a positive integer, we get $p_n = a_n p_{n-1} + p_{n-2} > a_n p_{n-1} \geq p_{n-1}$. Similarly $q_n > q_{n-1}$.
+\end{proof}
+
+Now suppose $x \in \mathbb{Q}$ and that $\abs{x - \frac{p}{q}} < \frac{1}{2q^2}$ 
+
+We can assume $(p,q) = 1$ because otherwise write $p/q = p'/q'$ where $(p', q') = 1$ and note that $\abs{x - \frac{p'}{q'}} < \frac{1}{2q^2} < \frac{1}{2q'^2}$ and so we can replace $p/q$ with $p'/q'$. \\
+
+Let $[a_0, \ldots, a_n]$ be the continued fraction for $\frac{p}{q}$ and $[a_0, \ldots, a_i] = \frac{p_i}{q_i}$, $\forall 0 \leq i \leq n$. Then $p_n = p$ and $q_n = q$ as both $(p,q) = (p_n,q_n) = 1$ \\
+
+If $x = \frac{p}{q}$, then $[a_0, \ldots, a_n]$ is the continued fraction expansion for $x$ and so $p/q$ is a convergent of the continued fraction expansion of $x$.
+
+If $\frac{p}{q} = [a_0]$ then $p=a_0, q=1$. So $\abs{x-a_0}$ is a rational less than $\frac12$. 
+
+If $x > a_0$ then $0 < x-a_0 < 1 \implies x-a_0 = [0,b_0,\ldots, b_m] \implies x = [a_0,b_0,\ldots, b_m]$ 
+
+Otherwise if $x < a_0$ then in this case we first note that $p/q = [a_0] = [a_0 - 1, 1]$ and since $\frac12 < x-a_0 + 1 < 1 \implies x - a_0 + 1 = [0,1,b_1\ldots, b_m] \implies x = [a_0-1,1,b_1,\ldots, b_m]$ and so in both the cases, $p/q$ is a convergent of the continued fraction expansion of $x$ \\
+
+Otherwise let $x = [a_0, \ldots, a_n, y]$ ($n>0$) and we solve for $y$ as follows:
+$$x = \frac{yp_n + p_{n-1}}{yq_n + q_{n-1}} \text{ (by above lemma)}$$ $$\implies y = \frac{p_{n-1}-xq_{n-1}}{xq_n - p_n} = \frac{q_np_{n-1}-p_nq_{n-1}}{q_n^2(x - \frac{p_n}{q_n})} - \frac{q_{n-1}}{q_n} = \frac{(-1)^n}{q_n^2(x - \frac{p_n}{q_n})} - \frac{q_{n-1}}{q_n}$$
+
+Now if $a_n = 1$, then we can re-write $[a_0, \ldots, a_{n-1}, a_n] = [a_0, \ldots, a_{n-1} + 1]$. Otherwise, we can re-write $[a_0, \ldots, a_{n-1}, a_n] = [a_0, \ldots, a_{n-1}, a_n-1, 1]$. Therefore, we can appropriately modify $n$ such that $(-1)^n\left(x - \frac{p_n}{q_n}\right) > 0$. Hence we get 
+$$y = \frac{1}{q_n^2\abs{x - \frac{p_n}{q_n}}} - \frac{q_{n-1}}{q_n} > 1$$
+because $q_n^2\abs{x - \frac{p_n}{q_n}} < \frac12$ and $q_n > q_{n-1}$ as $q_n$ is increasing.
+
+Finally, since $x$ is rational and $p_n, q_n$ are integers, we get that $y$ is a positive rational and we can find a continued fraction expansion for $y = [b_0, \ldots, b_m]$. Therefore, we get $x = [a_0, \ldots a_n, b_0, \ldots b_m]$ as required.
+
+
+
+
+
+\subsection*{Exercise 3}
+Let $X$ be the set of all search elements (needles) and $\ket \beta = \frac{1}{\sqrt x} \sum_{i \in X} \ket i$ where $x = |X|$
+
+And let $\ket \alpha = \frac{1}{\sqrt{N-x}} \sum_{i \not \in X} \ket i$ where $N$ is the total number of items.
+
+Denote by $\ket \psi$ the uniform superposition of all states, that is
+$$\ket \psi = \frac{1}{\sqrt N} \sum \ket i = \sqrt{1 - \frac x N} \ket \alpha + \sqrt{\frac x N} \ket \beta = \cos \theta \ket \alpha + \sin \theta \ket \beta$$
+
+where $\cos \theta = \sqrt{1-x/N}$. We define three operators:
+\begin{itemize}
+    \item Oracle operator $O$ where $O\ket i = - \ket i$ if $i \in X$ otherwise $O\ket i = \ket i$
+    \item Diffusion operator $D$ where $D = 2 \ket \psi \bra \psi - I$
+    \item Grover operator $G = DO$
+\end{itemize}
+
+Note that $O\ket \alpha = \ket \alpha$ and $O\ket \beta = -\ket \beta$
+
+Next note that, $\braket{\psi | \alpha} = \cos \theta$ and $\braket{\psi | \beta} = \sin \theta$ and so $D\ket \alpha = 2\cos \theta \ket \psi - \ket \alpha$ and $D\ket \beta = 2\sin \theta \ket \psi - \ket \beta$. Let $\ket \phi = \cos x \ket \alpha + \sin x \ket \beta$ be any general vector in the plane $P$ of $\ket \alpha$ and $\ket \beta$, then we have:
+
+\begin{align*}
+    G \ket \phi &= (\cos x) G \ket \alpha + (\sin x) G \ket \beta \\
+    &= (\cos x) D \ket \alpha - (\sin x) D \ket \beta \\
+    &= \cos x (2 \cos \theta \ket \psi - \ket \alpha) - \sin x (2 \sin \theta \ket \psi - \ket \beta) \\
+    &= (2 \cos x \cos \theta - 2 \sin x \sin \theta) \ket \psi - \cos x \ket \alpha + \sin x \ket \beta \\
+    &= (2 \cos x \cos^2 \theta - 2 \sin x \sin \theta \cos \theta - \cos x) \ket \alpha + (2 \cos x \cos \theta \sin \theta - 2 \sin x \sin^2 \theta + \sin x) \ket \beta \\
+    &= cos (2\theta + x) \ket \alpha + \sin (2\theta + x) \ket \beta \\
+    \\
+    \implies G \ket{\psi} &= cos (3\theta) \ket \alpha + \sin (3\theta) \ket \beta
+\end{align*}
+
+Therefore, $G$ is a counter-clockwise rotation (by $2\theta$) operator in $P$. And so it suffices to apply $G$ on $\ket \psi$ $k$ times such that $$2k\theta \sim \frac{\pi}{2} - \theta \implies k = \floor*{\frac{\pi}{4}\left(\frac{1}{\theta}\right) - \frac12} \leq  \frac{\pi}{4\theta}$$
+
+And using $\theta \geq \sin \theta = \sqrt{x/N}$, we get $\boxed{k \leq \frac{\pi}{4}\sqrt{\frac{N}{x}}}$
+
+Hence after $O(\sqrt{N/x})$ oracle queries, with high probability, we can find one of the search elements.
+
+
+\end{document}
+

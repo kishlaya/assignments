@@ -1,0 +1,207 @@
+\documentclass{article}
+\usepackage[margin=1in]{geometry}
+\setlength{\parindent}{0in}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{latexsym,amsfonts,amssymb,amsthm,amsmath}
+
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\Id}{Id}
+
+\usepackage{braket}
+\usepackage{mathrsfs}
+
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+\title{Quantum Computing - Assignment 3}
+\author{Kishlaya Jaiswal}
+
+\begin{document}
+
+\maketitle
+
+
+\subsection*{Exercise 1}
+Let $\ket{\psi}_{AB} \in H_A \otimes H_B$ be a pure state. Assume wlog $dim(H_A) \geq dim(H_B) = m$. By Schmidt decomposition there exist orthonormal bases $\{u_i \mid i \leq m\} \subset H_A$ and $\{v_i \mid i \leq m\} \subset H_B$ such that $$\ket{\psi}_{AB} = \sum_i \alpha_i \ket{u_i} \otimes \ket{v_i}$$
+
+\textbf{Claim} $\ket{\psi}_{AB}$ is entangled iff more than one Schmidt coefficients $\{\alpha_i \mid i \leq m\}$ are non-zero
+\begin{proof}
+Firstly, it is clear that atleast one Schmidt coefficient is non-zero because otherwise $\ket{\psi}_{AB} = 0$ is not a valid pure state. \\
+
+So suppose exactly one Schmidt coefficient $\alpha_i$ is non-zero, then
+$$\ket{\psi}_{AB} = \alpha_i \ket{u_i}_A \otimes \ket{v_i}_B$$ is a product state.
+
+Conversely, suppose more than one Schmidt coefficient is non-zero, say $\alpha_i$ and $\alpha_j$ where $i \neq j$. We need to show that $\ket{\psi}_{AB}$ is entangled. For the sake of contradiction assume that $\ket{\psi}_{AB} = \ket{\phi}_A \otimes \ket{\varphi}_B$ is a product state. Then we have
+\begin{align*}
+    \ket{\phi}_A \otimes \ket{\varphi}_B &= \sum_i \alpha_i \ket{u_i} \otimes \ket{v_i} \\
+    \implies \big(\bra{u_i} \otimes \bra{v_i}\big) \big(\ket{\phi}_A \otimes \ket{\varphi}_B\big) &= \big(\bra{u_i} \otimes \bra{v_i}\big) \left(\sum_i \alpha_i \ket{u_i} \otimes \ket{v_i}\right) \\
+    \implies \braket{u_i | \phi} \braket{v_i | \varphi} &= \alpha_i
+\end{align*}
+
+Similarly, $\braket{u_j | \phi} \braket{v_j | \varphi} = \alpha_j$. Furthermore,
+\begin{align*}
+    \ket{\phi}_A \otimes \ket{\varphi}_B &= \sum_i \alpha_i \ket{u_i} \otimes \ket{v_i} \\
+    \implies \big(\bra{u_i} \otimes \bra{v_j}\big) \big(\ket{\phi}_A \otimes \ket{\varphi}_B \big) &= \big(\bra{u_i} \otimes \bra{v_j} \big) \left(\sum_i \alpha_i \ket{u_i} \otimes \ket{v_i}\right) \\
+    \implies \braket{u_i | \phi} \braket{v_j | \varphi} &= 0
+\end{align*}
+
+Thus, we get $\alpha_i \alpha_j = \braket{u_i | \phi} \braket{v_i | \varphi} \braket{u_j | \phi} \braket{v_j | \varphi} = 0$. That is both $\alpha_i$ and $\alpha_j$ can't be non-zero, leading us to a contradiction.
+
+\end{proof}
+
+\subsection*{Exercise 2}
+\begin{proof}
+We will prove that Trace is a commutative operator, that is $\Tr(AB)= \Tr(BA)$
+\begin{align*}
+    \Tr(AB) &= \sum_i \bra i AB \ket i \\
+    &= \sum_i \bra i A \left(\sum_j \ket j \bra j \right)B \ket i \\
+    &= \sum_i \sum_j \bra i A \ket j \bra j B \ket i \\
+    &= \sum_j \sum_i \bra j B \ket i \bra i A \ket j \\
+    &= \sum_j \bra j B \left( \sum_i \ket i \bra i \right) A \ket j \\
+    &= \sum_j \bra j BA \ket j \\
+    &= \Tr(BA)
+\end{align*}
+
+Now $\Tr(A(BC)) = \Tr((BC)A)$ and $\Tr(B(CA)) = \Tr((CA)B)$. Since matrix multiplication is associative we get $\Tr(ABC) = \Tr(BCA) = \Tr(CAB)$ \\
+
+\begin{align*}
+    \Tr_B (\ket{x_1} \bra{x_2}_A \otimes \ket{y_1} \bra{y_2}_B) &= \sum_i I_A \otimes \bra{i}_B \bigg( \ket{x_1} \bra{x_2}_A \otimes \ket{y_1} \bra{y_2}_B \bigg) I_A \otimes \ket{i}_B
+\end{align*}
+
+Using the rule $(A \otimes B).(C \otimes D) = AB \otimes CD$, we get
+\begin{align*}
+    \Tr_B (\ket{x_1} \bra{x_2}_A \otimes \ket{y_1} \bra{y_2}_B) &= \sum_i \ket{x_1} \bra{x_2}_A \otimes \bra{i}_B \ket{y_1} \bra{y_2}_B \ket{i}_B \\
+    &= \ket{x_1} \bra{x_2}_A \otimes \sum_i \bra{i}_B \ket{y_1} \bra{y_2}_B \ket{i}_B \\
+    &= \ket{x_1} \bra{x_2}_A \otimes \Tr (\ket{y_1} \bra{y_2}_B) \\
+    &= \ket{x_1} \bra{x_2}_A \otimes \Tr (\braket{y_2 | y_1}) \text{  (Trace is commutative)} \\
+    &= \ket{x_1} \bra{x_2}_A \braket{y_2 | y_1}
+\end{align*}
+\end{proof}
+
+\subsection*{Exercise 3}
+Let $N : \mathscr{L}(H) \to \mathscr{L}(H)$, $N(\rho) = (1-p)\rho + p Z \rho Z$. We will show that $N$ is a quantum channel, that is $N$ is a linear, trace-preserving and completely positive operator. \\ 
+
+\textbf{Claim} $N$ is linear
+\begin{proof}
+\begin{align*}
+    N(\rho_1 + \lambda \rho_2) &= (1-p)(\rho_1 + \lambda \rho_2) + p Z (\rho_1 + \lambda \rho_2) Z \\
+    &= (1-p)(\rho_1) + (1-p)(\lambda \rho_2) + p Z (\rho_1) Z + pZ(\lambda \rho_2) Z \\
+    &= ((1-p)\rho_1 + p Z \rho_1 Z) + \lambda ((1-p)\rho_2 + p Z \rho_2 Z) \\
+    &= N(\rho_1) + \lambda N(\rho_2)
+\end{align*}
+\end{proof}
+
+\textbf{Claim} $N$ is trace preserving
+\begin{proof}
+\begin{align*}
+    \Tr (N(\rho)) &= \Tr ((1-p)\rho + p Z \rho Z) \\
+    &= (1-p) \Tr (\rho) + p \Tr (Z \rho Z) \\
+    &= (1-p) \Tr (\rho) + p \Tr (Z^2 \rho) \\
+    &= (1-p) \Tr (\rho) + p \Tr (\rho) \\
+    &= \Tr (\rho)
+\end{align*}
+\end{proof}
+
+\textbf{Claim} $\forall E$, $\Id_E \otimes N : \mathscr{L}(H_E \otimes H) \to \mathscr{L}(H_E \otimes H)$ is a positive operator
+\begin{proof}
+
+Let $\theta \in \mathscr{L}(H_E \otimes H)$ be any PSD matrix. Want to show that $(\Id_E \otimes N)(\theta)$ is also PSD matrix. 
+Since $\theta$ is a PSD matrix, we have $\forall x$ $\braket{x|\theta|x} \geq 0$
+
+Identify $\mathscr{L}(H_E \otimes H) \cong \mathscr{L}(H_E) \otimes \mathscr{L}(H)$ and fix any basis $\{\sigma_i \mid i \leq m\}$ for $\mathscr{L}(H_E)$ and $\{\rho_j \mid j \leq n\}$ for $\mathscr{L}(H)$, then $\theta = \sum_{i,j} c_{ij} (\sigma_i \otimes \rho_j)$ for some $c_{ij} \in \mathbb{C}$.
+
+$$(\Id_E \otimes N)(\theta) = \sum_{i,j} c_{ij} (\Id_E \otimes N)(\sigma_i \otimes \rho_j) = \sum_{i,j} c_{ij} \sigma_i \otimes N(\rho_j)$$
+
+\begin{align*}
+    \braket{x | \Id_E \otimes N(\theta) | x} &= \sum_{i,j} c_{ij} \braket{x | \sigma_i \otimes N(\rho_j) | x} \\
+    &= \sum_{i,j} c_{ij} (1-p) \braket{x | \sigma_i \otimes \rho_j | x} + \sum_{i,j} c_{ij} p \braket{x | \sigma_i \otimes Z\rho_j Z | x} \\
+\end{align*}
+
+But we can re-write $$\sigma \otimes Z \rho Z = (I_E \otimes Z)(\sigma \otimes \rho)(I_E \otimes Z)$$ $$\implies \braket{x|\sigma \otimes Z \rho Z|x} = \braket{y|\sigma \otimes \rho|y}$$ 
+where $\ket{y} = (I_E \otimes Z) \ket{x}$ (because $I_E \otimes Z$ is Hermitian). Hence we get
+$$\braket{x | \Id_E \otimes N(\theta) | x} = (1-p) \sum_{i,j} c_{ij} \braket{x | \sigma_i \otimes \rho_j | x} + p \sum_{i,j} c_{ij} \braket{y | \sigma_i \otimes \rho_j | y} = (1-p)\braket{x|\theta|x} + p\braket{y|\theta|y} \geq 0$$
+
+that is $N$ is a completely positive operator.
+\end{proof}
+
+% First we show that $N$ is a positive map. Let $v$ be any vector and $\rho$ be a PSD matrix, i.e. $\braket{v|\rho|v} \geq 0$, then
+% \begin{align*}
+%     \braket{v|N(\rho)|v} &= (1-p)\braket{v|\rho|v} + p \braket{v|Z \rho Z|v} \\
+%     &= (1-p)\braket{v|\rho|v} + p \braket{w| \rho |w} \text{  where } w = Z\ket{v}\\
+%     &\geq (1-p)0 + p0 = 0
+% \end{align*}
+
+% Now consider any elementary PSD matrix $(\sigma \otimes \rho)$ and vector $\ket{u} \otimes \ket{v}$, then 
+% \begin{itemize}
+%     \item $(\bra{u} \otimes \bra{v})(\sigma \otimes \rho)(\ket{u} \otimes \ket{v}) = \bra{u} \sigma \ket{u}  \bra{v} \rho \ket{v} \geq 0$
+%     \item and similarly, $\bra{u} \sigma \ket{u}  \bra{w} \rho \ket{w} \geq 0$ where $w = Z\ket{v}$
+% \end{itemize}
+
+% \begin{align*}
+%     \braket{u \otimes v|\Id_E \otimes N(\sigma \otimes \rho)|u \otimes v} &= \braket{u \otimes v|\Id_E(\sigma) \otimes N(\rho)|u \otimes v} \\
+%     &= \braket{u \otimes v|\sigma \otimes N(\rho)|u \otimes v} \\
+%     &= \braket{u | \sigma | u} \braket{v | N(\rho) | v} \\
+%     &= (1-p) \braket{u | \sigma | u} \braket{v|\rho|v} + p \braket{u | \sigma | u} \braket{w| \rho |w} \text{  where } w = Z\ket{v}\\
+%     &\geq (1-p)0 + p0 = 0
+% \end{align*}
+
+% For any general PSD matrix $\theta \in H_E \otimes H$ and any vector $x$, using Schmidt decomposition, we can write
+% \begin{itemize}
+%     \item $\theta = \sum_i \alpha_i \sigma_i \otimes \rho_i$ where $\alpha_i \geq 0$
+%     \item $\ket{x} = \sum_i \beta_i \ket{u_i} \otimes \ket{v_i}$ where $\beta_i \geq 0$
+% \end{itemize}
+
+% \begin{align*}
+%     \braket{x | \Id_E \otimes N (\theta) | x} &= \sum_i \alpha_i \braket{x | \Id_E \otimes N(\sigma_i \otimes \rho_i) | x} \\ 
+%     &= \sum_i \alpha_i \sum_j \sum_k \beta_j \beta_k \braket{u_j \otimes v_j | \Id_E \otimes N(\sigma_i \otimes \rho_i) | u_k \otimes v_k} \\
+%     &= \sum_{i,j,k} \alpha_i \beta_j \beta_k \bigg(\braket{u_j \otimes v_j | \Id_E \otimes N(\sigma_i \otimes \rho_i) | u_k \otimes v_k}\bigg) \\
+%     &\geq 0 
+% \end{align*}
+
+% Hence $\Id_E \otimes N$ is a positive map for every $E$. That is $N$ is a completely positive map.
+
+We begin by noting the following relations: 
+$$ZXZ = -X, ZYZ = -Y$$
+because
+\begin{itemize}
+    \item $ZXZ\ket0 = ZX\ket0 = Z\ket1 = - \ket1 = -X\ket0$ and $ZXZ\ket1 = -ZX\ket1 = -Z\ket0 = - \ket0 = -X\ket1$
+    \item $ZYZ\ket0 = ZY\ket0 = iZ\ket1 = - i\ket1 = -Y\ket0$ and $ZYZ\ket1 = -ZY\ket1 = iZ\ket0 = i\ket0 = -Y\ket1$ \\
+\end{itemize}
+
+Thus, we get $N(X) = (1-p)X + pZXZ = (1-2p)X$ and $N(Y) = (1-p)Y + pZYZ = (1-2p)Y$ and $N(Z) = (1-p)Z + pZZZ = Z$. Hence
+\begin{align*}
+    N\left(\frac12 (I + r_x X + r_y Y + r_z Z)\right) &= \frac12 (N(I) + r_x N(X) + r_y N(Y) + r_z N(Z)) \\
+    &= \frac12 (I + r_x (1-2p)X + r_y (1-2p) Y + r_z Z)
+\end{align*}
+
+\subsection*{Exercise 4}
+\textbf{Claim} Let $A$ be any linear operator over a $\mathbb{C}-$vector space, then we can write $A = B+iC$ for some $B,C$ Hermitian operators
+\begin{proof}
+Consider $B = (A+A^\dagger)/2$ and $C = (A-A^\dagger)/2i$ then $A = B+iC$ is clear.
+
+Moreover, $B^\dagger = (A^\dagger + A)/2 = B$ and $C^\dagger = -(A^\dagger-A)/2i = C$, as desired.
+\end{proof}
+
+\textbf{Claim} Let $A$ be a Hermitian operator then $\forall v$, $\braket{v|A|v} \in \mathbb{R}$
+\begin{proof}
+Using spectral theorem, we know that there exists an orthonormal eigenbasis $\{v_i \mid i \leq n\}$ such that $Av_i = \lambda_i v_i$ where $\lambda_i \in \mathbb{R}$, $\forall i \leq n$
+
+Now for any $v$, write $v = \sum_i c_i v_i$ and then
+$$\braket{v|A|v} = \sum_i |c_i|^2 \lambda_i \in \mathbb{R}$$
+\end{proof}
+
+\textbf{Claim} Let $A$ be any linear operator over a $\mathbb{C}-$vector space such that $\forall v$, $\braket{v|A|v} \in \mathbb{R}$. Then $A$ is a  Hermitian operator.
+\begin{proof}
+We write $A = B+iC$ with $B,C$ Hermitian.
+
+Since $B,C$ are Hermitian, $\braket{v|B|v} \in \mathbb{R}$ and $\braket{v|C|v} \in \mathbb{R}$. Therefore $\forall v$
+
+$$\braket{v|A|v} = \braket{v|B|v} + i\braket{v|C|v} \in \mathbb{R} \implies \braket{v|C|v} = 0$$
+
+Hence $C = 0 \implies A = B$ which is Hermitian.
+\end{proof}
+
+Finally, let $A$ be a positive operator, which means $\forall v$, $\braket{v|A|v} \geq 0$. That is $\forall v$, $\braket{v|A|v} \in \mathbb{R}$. Using above claim, we get that $A$ is Hermitian.
+\end{document}
+

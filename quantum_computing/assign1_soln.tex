@@ -1,0 +1,137 @@
+ \documentclass{article}
+\usepackage[margin=1in]{geometry}
+\setlength{\parindent}{0in}
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{latexsym,amsfonts,amssymb,amsthm,amsmath}
+\usepackage {tikz}
+\usetikzlibrary {positioning}
+\usetikzlibrary{quantikz}
+
+\usepackage{braket}
+
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+
+\title{Quantum Computing - Assignment 1}
+\author{Kishlaya Jaiswal}
+
+\begin{document}
+
+\maketitle
+
+
+\subsection*{Exercise 1}
+\begin{proof}
+Observe that
+$$\norm{ \ket{\psi} }^2 = \braket{\psi|\psi} = \big(\ket{\psi}\big)^{\dag} \big(\ket{\psi}\big)$$
+$U$ is unitary that is $U^{\dag} U = I$, and hence
+$$\norm{ U\ket{\psi} }^2 = \big(U\ket{\psi}\big)^{\dag} \big(U\ket{\psi}\big) = \bra{\psi} U^\dag U \ket{\psi} = \bra{\psi} I \ket{\psi} = \braket{\psi|\psi} = \norm{ \ket{\psi} }^2$$
+
+Since $\norm{.} \geq 0 \implies \norm{ U\ket{\psi} } = \norm{ \ket{\psi} }$
+\end{proof}
+
+
+\subsection*{Exercise 2}
+\begin{proof}
+\begin{align*}
+    [X,Z] \ket{0} &= (XZ-ZX) \ket{0} = X\ket{0} - Z\ket{1} = \ket{1} + \ket{1} = 2 \ket{1} \\
+    [X,Z] \ket{1} &= (XZ-ZX) \ket{1} = -X\ket{1} - Z\ket{0} = -\ket{0} - \ket{0} = -2 \ket{0}
+\end{align*}
+
+Hence $[X,Z] = \begin{pmatrix} 0 & -2 \\ 2 & 0\end{pmatrix}$
+\end{proof}
+
+
+\subsection*{Exercise 3}
+\begin{proof}
+$$X = \begin{pmatrix}0 & 1 \\ 1 & 0\end{pmatrix} \implies X^\dag = \begin{pmatrix}0 & 1 \\ 1 & 0\end{pmatrix} = X \text{ and } X^\dag X = \begin{pmatrix}0 & 1 \\ 1 & 0\end{pmatrix}\begin{pmatrix}0 & 1 \\ 1 & 0\end{pmatrix} = \begin{pmatrix}1 & 0 \\ 0 & 1\end{pmatrix} = I$$
+$$Y = \begin{pmatrix}0 & -i \\ i & 0\end{pmatrix} \implies Y^\dag = \begin{pmatrix}0 & -i \\ i & 0\end{pmatrix} = Y \text{ and } Y^\dag Y = \begin{pmatrix}0 & -i \\ i & 0\end{pmatrix}\begin{pmatrix}0 & -i \\ i & 0\end{pmatrix} = \begin{pmatrix}1 & 0 \\ 0 & 1\end{pmatrix} = I$$
+$$Z = \begin{pmatrix}1 & 0 \\ 0 & -1\end{pmatrix} \implies Z^\dag = \begin{pmatrix}1 & 0 \\ 0 & -1\end{pmatrix} = Z \text{ and } Z^\dag Z = \begin{pmatrix}1 & 0 \\ 0 & -1\end{pmatrix}\begin{pmatrix}1 & 0 \\ 0 & -1\end{pmatrix} = \begin{pmatrix}1 & 0 \\ 0 & 1\end{pmatrix} = I$$
+
+Thus Pauli matrices are Hermitian and Unitary. And,
+
+% Suppose $A$ is any Hermitian matrix, then for any non-zero eigenvector $v$ with eigenvalue $\lambda$: 
+% $$\bar\lambda \braket{v, v} = \braket{\lambda v, v} = \braket{Av, v} = \braket{v, A^\dag v} = \braket{v, Av} = \braket{v, \lambda v} = \lambda \braket{v, v}$$
+% So, eigenvalues of Hermitian matrices are real. 
+
+% Suppose $A$ is any Unitary matrix, then for any non-zero eigenvector $v$ with eigenvalue $\lambda$: 
+% $$\bar \lambda \braket{v, Av} = \braket{\lambda v, Av} = \braket{Av, Av} = \braket{v, A^\dag A v} = \braket{v, v}$$
+
+% But $\bar \lambda \braket{v, Av} = \lambda\bar \lambda \braket{v, v}$ and hence $|\lambda|^2 = 1$. So eigenvalues of Unitary matrices lie on the unit circle.
+
+% Since the only real numbers satisfying $|\lambda|^2 = 1$ are $\pm 1$, so only possible eigenvalues of Pauli matrices are $\pm 1$ and in particular
+
+$$X\begin{pmatrix}1/\sqrt{2} \\ 1/\sqrt{2}\end{pmatrix} = \begin{pmatrix}1/\sqrt{2} \\ 1/\sqrt{2}\end{pmatrix}, X\begin{pmatrix}1/\sqrt{2} \\ -1/\sqrt{2}\end{pmatrix} = - \begin{pmatrix}1/\sqrt{2} \\ -1/\sqrt{2}\end{pmatrix}$$
+
+$$Y\begin{pmatrix}1/\sqrt{2} \\ i/\sqrt{2}\end{pmatrix} = \begin{pmatrix}1/\sqrt{2} \\ i/\sqrt{2}\end{pmatrix}, Y\begin{pmatrix}1/\sqrt{2} \\ -i/\sqrt{2}\end{pmatrix} = -\begin{pmatrix}1/\sqrt{2} \\ -i/\sqrt{2}\end{pmatrix}$$
+
+$$Z\begin{pmatrix}1 \\ 0\end{pmatrix} = \begin{pmatrix}1 \\ 0\end{pmatrix}, Z\begin{pmatrix}0 \\ 1\end{pmatrix} = -\begin{pmatrix}0 \\ 1\end{pmatrix}$$
+\end{proof}
+
+Thus the eigenvalues are of Pauli matrices are $\pm 1$.
+
+\subsection*{Exercise 4}
+\begin{proof}
+\begin{align*}
+  HXH \ket{0} &= HX \ket{+} = H \ket{+} = \ket{0}  \\
+  HXH \ket{1} &= HX \ket{-} = H (-\ket{-}) = -\ket{1}
+\end{align*}
+And hence $HXH = Z$
+
+\begin{align*}
+  HZH \ket{0} &= HZ \ket{+} = H \ket{-} = \ket{1} \\  
+  HZH \ket{1} &= HZ \ket{-} = H \ket{+} = \ket{0}
+\end{align*}
+And hence $HZH = X$
+\end{proof}
+
+
+\subsection*{Exercise 5}
+\begin{proof}
+From the above exercise $3$, we know that $\ket{+}$ is an eigenvector of $X$ with eigenvalue $1$ and $\ket{-}$ is an eigenvector of $X$ with eigenvalue $-1$, that is $X = \ket{+}\bra{+} - \ket{-}\bra{-}$
+
+Hence $\{\ket+ \bra+, \ket- \bra-\}$ is an eigenbasis for $X$ and so $\ket+ \bra+$ and $\ket- \bra-$ are the measurement operators corresponding to a measurement of $X$ observable.
+\end{proof}
+
+
+\subsection*{Exercise 6}
+\begin{proof}
+First we check that $\frac{1}{\sqrt{2}}\big(\ket{00} + \ket{11}\big) = \frac{1}{\sqrt{2}}\big(\ket{++} + \ket{--}\big)$ indeed.
+
+\begin{align*}
+    \ket{++} + \ket{--} &= \frac{1}{2}(\ket0 + \ket1)(\ket0 + \ket 1) + \frac{1}{2}(\ket0 - \ket1)(\ket0 - \ket 1) \\ 
+    &= \frac12 (\ket{00} + \ket{01} + \ket{10} + \ket{11} + \ket{00} - \ket{01} - \ket{10} + \ket{11}) = \ket{00} + \ket{11}
+\end{align*}
+
+So it suffices to show that $\frac{1}{\sqrt{2}}\big( \ket{00} + \ket{11}\big)$ is an entangled state. \\
+
+Suppose not and so it can be written as $\ket{\psi} \otimes \ket{\phi}$ where $\ket{\psi} = \alpha \ket0 + \beta \ket1$ and $\ket\phi = \gamma \ket0 + \delta \ket1$.
+
+Then $\ket{\psi} \otimes \ket{\phi} = \alpha \gamma \ket{00} + \alpha \delta \ket{01} + \beta \gamma \ket{10} + \beta \delta \ket{11} = \frac{1}{\sqrt{2}}\big(\ket{00} + \ket{11}\big)$ \\
+
+Since $\{\ket{00}, \ket{01}, \ket{10}, \ket{11}\}$ is a linearly independent set in $\mathbb{C}^4$, we get $\alpha \delta = \beta \gamma = 0$ and $\alpha \gamma = \beta \delta \neq 0$ whose solution doesn't exist. Hence $\frac{1}{\sqrt{2}}\big(\ket{00} + \ket{11}\big)$ is an entangled state.
+\end{proof}
+
+
+\subsection*{Exercise 7}
+\begin{center}
+\begin{quantikz}
+\lstick{$\ket{0}$} & \gate{H} & \ctrl{1} & \qw \rstick[wires=2]{$\ket\phi$} \\
+\lstick{$\ket{0}$} & \qw & \targ{} & \qw 
+\end{quantikz}
+\end{center}
+
+\begin{proof}
+We start with $\ket\psi = \ket{00}$ state.\\
+
+
+Applying $H \otimes I$ to $\ket\psi$, we get $\frac{1}{\sqrt2}\big(\ket0 + \ket1\big)\ket0 = \frac{1}{\sqrt2}\big(\ket{00} + \ket{10}\big)$\\
+
+
+Applying controlled-NOT gate (where first qubit is the control and second qubit is target) to this, we finally get $\ket\phi = \frac{1}{\sqrt2}\big(\ket{00} + \ket{11}\big)$ as required.
+\end{proof}
+
+
+\end{document}
+
