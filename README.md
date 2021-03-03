@@ -17,3 +17,13 @@ I have decided to LaTeX all my assignments from now onwards, and I shall upload 
 - Computational Complexity
 - [Spectral Graph Theory](https://github.com/kishlaya/random_graph)
 - Graph Theory (audit)
+
+## Semester 3 (Fall 2020)
+
+- Quantum Computing
+
+## Semester 4 (Spring 2021)
+
+- Cryptography
+- Financial Models
+
