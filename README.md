@@ -1,5 +1,7 @@
 # Assignments from my MSc CS programme
 
+> FINAL UPDATE: My MSc CS programme is now over. Adios!
+
 I have decided to LaTeX all my assignments from now onwards, and I shall upload them here.
 
 ## Semester 1 (Fall 2019)
