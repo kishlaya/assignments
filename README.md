@@ -27,3 +27,8 @@ I have decided to LaTeX all my assignments from now onwards, and I shall upload 
 - [Cryptography](https://gist.github.com/kishlaya/b5b9c14d1baf60729a6f2b182eb61180)
 - Financial Models
 
+## Master's Thesis
+
+- Thesis
+- Defense
+- [arXiv](https://arxiv.org/abs/2106.00714)
